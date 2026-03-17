@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Budha Library — Bodhgaya</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gold:#c9a84c;--gold2:#f0d080;
+  --dark:#0d0d0d;--dark2:#161616;--dark3:#1e1e1e;--dark4:#252525;
+  --text:#e8e0d0;--muted:#888070;
+  --red:#e05252;--green:#52c07a;--blue:#5288c0;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--dark);color:var(--text);font-family:'DM Sans',sans-serif;font-size:16px;line-height:1.6;overflow-x:hidden;}
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:var(--dark2);}
+::-webkit-scrollbar-thumb{background:var(--gold);border-radius:3px;}
+
+/* ── TICKER ── */
+.ticker-wrap{background:var(--gold);color:var(--dark);overflow:hidden;height:34px;display:flex;align-items:center;position:relative;z-index:200;}
+.ticker-label{background:var(--dark);color:var(--gold);padding:0 1rem;height:100%;display:flex;align-items:center;font-size:.72rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;flex-shrink:0;}
+.ticker-track{display:flex;animation:ticker 45s linear infinite;white-space:nowrap;}
+.ticker-track span{padding:0 2.5rem;font-size:.8rem;font-weight:500;}
+.ticker-track span::before{content:'◆  ';}
+@keyframes ticker{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+
+/* ── NAVBAR ── */
+nav{background:rgba(13,13,13,.97);backdrop-filter:blur(20px);border-bottom:1px solid rgba(201,168,76,.2);position:sticky;top:0;z-index:100;padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:64px;}
+.nav-logo{display:flex;align-items:center;gap:.6rem;text-decoration:none;}
+.nav-logo img{height:42px;width:42px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);}
+.nav-logo-text{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:700;color:var(--gold);line-height:1.1;}
+.nav-logo-text small{display:block;font-size:.65rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:400;letter-spacing:1px;text-transform:uppercase;}
+.nav-links{display:flex;align-items:center;gap:.1rem;}
+.nav-links a{color:var(--text);text-decoration:none;padding:.45rem .85rem;font-size:.83rem;font-weight:500;border-radius:6px;opacity:.75;transition:all .2s;white-space:nowrap;}
+.nav-links a:hover{opacity:1;background:rgba(201,168,76,.1);color:var(--gold);}
+.nav-cta{background:var(--gold)!important;color:var(--dark)!important;opacity:1!important;font-weight:600!important;padding:.45rem 1.1rem!important;}
+.nav-cta:hover{background:var(--gold2)!important;}
+
+/* HAMBURGER */
+.nav-hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:.5rem;border:none;background:none;z-index:101;}
+.nav-hamburger span{display:block;width:24px;height:2px;background:var(--gold);border-radius:2px;transition:all .3s;}
+.nav-hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.nav-hamburger.open span:nth-child(2){opacity:0;}
+.nav-hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+/* MOBILE DRAWER */
+.mobile-drawer{position:fixed;top:64px;left:0;right:0;background:rgba(14,14,14,.98);backdrop-filter:blur(20px);border-bottom:1px solid rgba(201,168,76,.15);z-index:99;transform:translateY(-110%);transition:transform .35s cubic-bezier(.4,0,.2,1);padding:1rem 1.5rem 1.5rem;}
+.mobile-drawer.open{transform:translateY(0);}
+.mobile-drawer a{display:block;color:var(--text);text-decoration:none;padding:.75rem 1rem;font-size:.95rem;font-weight:500;border-bottom:1px solid rgba(255,255,255,.05);opacity:.8;transition:all .2s;}
+.mobile-drawer a:hover{opacity:1;color:var(--gold);padding-left:1.5rem;}
+.mobile-drawer a:last-child{border-bottom:none;}
+.drawer-cta{background:var(--gold)!important;color:var(--dark)!important;opacity:1!important;border-radius:8px!important;margin-top:.8rem;text-align:center;font-weight:700!important;}
+.drawer-close{display:flex;justify-content:flex-end;margin-bottom:.5rem;}
+.drawer-close button{background:rgba(255,255,255,.06);border:none;color:var(--muted);font-size:1.1rem;cursor:pointer;border-radius:6px;padding:.3rem .7rem;transition:all .2s;}
+.drawer-close button:hover{color:var(--gold);background:rgba(201,168,76,.1);}
+
+/* ── HERO ── */
+.hero{position:relative;min-height:92vh;display:flex;align-items:center;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=1600&q=80');background-size:cover;background-position:center;filter:brightness(.22) saturate(.5);transform:scale(1.06);animation:heroZoom 18s ease-in-out infinite alternate;}
+@keyframes heroZoom{from{transform:scale(1.06);}to{transform:scale(1.13);}}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(13,13,13,.95) 0%,rgba(13,13,13,.55) 55%,transparent 100%);}
+.hero-content{position:relative;z-index:2;padding:3rem 5vw;max-width:780px;animation:fadeUp .9s ease both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(35px);}to{opacity:1;transform:translateY(0);}}
+.hero-tag{display:inline-flex;align-items:center;gap:.55rem;background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.3);color:var(--gold);padding:.38rem .95rem;border-radius:30px;font-size:.72rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;margin-bottom:1.3rem;}
+.hero-tag::before{content:'';width:6px;height:6px;background:var(--gold);border-radius:50%;animation:pulse 1.5s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+.hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(2.6rem,7vw,5.5rem);font-weight:700;line-height:1.06;margin-bottom:1.2rem;color:#fff;}
+.hero h1 em{font-style:italic;color:var(--gold);}
+.hero p{font-size:1.05rem;color:rgba(232,224,208,.75);max-width:500px;margin-bottom:2rem;font-weight:300;line-height:1.85;}
+.hero-btns{display:flex;gap:.9rem;flex-wrap:wrap;}
+.btn-gold{background:var(--gold);color:var(--dark);padding:.85rem 1.8rem;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;letter-spacing:.3px;text-decoration:none;display:inline-flex;align-items:center;gap:.5rem;transition:all .25s;}
+.btn-gold:hover{background:var(--gold2);transform:translateY(-2px);box-shadow:0 8px 25px rgba(201,168,76,.35);}
+.btn-outline{background:transparent;color:var(--text);padding:.85rem 1.8rem;border:1.5px solid rgba(255,255,255,.22);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:500;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:.5rem;transition:all .25s;}
+.btn-outline:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-2px);}
+.hero-stats{display:flex;gap:1.2rem;flex-wrap:wrap;margin-top:2.5rem;}
+.hero-stat{background:rgba(22,22,22,.88);border:1px solid rgba(201,168,76,.2);backdrop-filter:blur(10px);border-radius:12px;padding:1rem 1.4rem;text-align:center;}
+.hero-stat-num{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:700;color:var(--gold);display:block;line-height:1;}
+.hero-stat-label{font-size:.68rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:.3rem;}
+
+/* ── SECTIONS ── */
+section{padding:5rem 5vw;}
+.section-label{display:inline-block;color:var(--gold);font-size:.72rem;font-weight:600;letter-spacing:3px;text-transform:uppercase;margin-bottom:.8rem;}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,4vw,3rem);font-weight:700;line-height:1.15;margin-bottom:.8rem;color:#fff;}
+.section-title em{color:var(--gold);font-style:italic;}
+.section-desc{color:var(--muted);max-width:520px;line-height:1.8;font-weight:300;font-size:.95rem;}
+.section-header{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1rem;margin-bottom:2.5rem;}
+
+/* ── FACILITIES ── */
+.facilities{background:var(--dark2);}
+.fac-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.2rem;}
+@media(max-width:600px){.fac-grid{grid-template-columns:repeat(2,1fr);gap:.8rem;}}
+@media(max-width:380px){.fac-grid{grid-template-columns:1fr;}}
+.fac-card{background:var(--dark3);border:1px solid rgba(255,255,255,.06);border-radius:14px;overflow:hidden;transition:transform .3s,box-shadow .3s,border-color .3s;cursor:pointer;}
+.fac-card:hover{transform:translateY(-6px);box-shadow:0 18px 45px rgba(0,0,0,.5);border-color:rgba(201,168,76,.35);}
+.fac-img{width:100%;height:160px;object-fit:cover;display:block;filter:brightness(.82);transition:filter .3s,transform .5s;}
+.fac-card:hover .fac-img{filter:brightness(1);transform:scale(1.04);}
+.fac-body{padding:1.2rem;}
+.fac-icon{width:38px;height:38px;background:rgba(201,168,76,.12);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;margin-bottom:.9rem;}
+.fac-body h3{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:700;color:#fff;margin-bottom:.4rem;}
+.fac-body p{font-size:.82rem;color:var(--muted);line-height:1.65;}
+.fac-tag{display:inline-block;margin-top:.8rem;padding:.22rem .7rem;background:rgba(201,168,76,.1);color:var(--gold);border-radius:20px;font-size:.68rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;}
+
+/* ── GALLERY ── */
+.gallery{background:var(--dark);}
+.gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.9rem;}
+@media(max-width:700px){.gallery-grid{grid-template-columns:repeat(2,1fr);}}
+.gal-item{border-radius:10px;overflow:hidden;position:relative;cursor:pointer;aspect-ratio:4/3;}
+.gal-item.tall{aspect-ratio:3/4;}
+.gal-item img{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(.78) saturate(.85);transition:transform .5s,filter .3s;}
+.gal-item:hover img{transform:scale(1.08);filter:brightness(1) saturate(1);}
+.gal-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.75) 0%,transparent 55%);opacity:0;transition:opacity .3s;display:flex;align-items:flex-end;padding:1rem;}
+.gal-item:hover .gal-overlay{opacity:1;}
+.gal-overlay span{font-size:.78rem;color:#fff;font-weight:500;}
+
+/* VIDEO SECTION */
+.video-wrap{margin-top:2rem;border-radius:14px;overflow:hidden;aspect-ratio:16/9;border:1px solid rgba(201,168,76,.15);}
+.video-wrap video{width:100%;height:100%;object-fit:cover;display:block;}
+
+/* ── TIMINGS & SEATS ── */
+.timings{background:var(--dark2);}
+.tim-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
+@media(max-width:700px){.tim-grid{grid-template-columns:1fr;}}
+.tim-card{background:var(--dark3);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:1.8rem;}
+.tim-card h3{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:700;color:var(--gold);margin-bottom:1.3rem;display:flex;align-items:center;gap:.6rem;}
+.tim-row{display:flex;justify-content:space-between;align-items:center;padding:.7rem 0;border-bottom:1px solid rgba(255,255,255,.05);flex-wrap:wrap;gap:.4rem;}
+.tim-row:last-child{border-bottom:none;}
+.tim-day{font-size:.87rem;color:var(--muted);}
+.tim-time{font-size:.87rem;color:var(--text);font-weight:500;}
+.t-open{padding:.18rem .65rem;border-radius:12px;font-size:.68rem;font-weight:700;background:rgba(82,192,122,.12);color:var(--green);}
+.t-closed{padding:.18rem .65rem;border-radius:12px;font-size:.68rem;font-weight:700;background:rgba(224,82,82,.12);color:var(--red);}
+.seat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-top:.5rem;}
+.seat-zone{background:var(--dark4);border-radius:10px;padding:.9rem;text-align:center;border:1px solid rgba(255,255,255,.05);}
+.seat-zone-name{font-size:.7rem;color:var(--muted);margin-bottom:.3rem;letter-spacing:.4px;}
+.seat-zone-count{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:700;line-height:1;}
+.seat-zone-total{font-size:.65rem;color:var(--muted);}
+.many{color:var(--green);}.few{color:var(--gold);}.full{color:var(--red);}
+
+/* ── MEMBERSHIP ── */
+.membership{background:var(--dark);}
+.plans-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1.2rem;}
+@media(max-width:600px){.plans-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:380px){.plans-grid{grid-template-columns:1fr;}}
+.plan-card{background:var(--dark2);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:1.8rem;position:relative;transition:transform .3s,box-shadow .3s;}
+.plan-card:hover{transform:translateY(-6px);box-shadow:0 18px 45px rgba(0,0,0,.4);}
+.plan-card.featured{border-color:var(--gold);background:linear-gradient(145deg,rgba(201,168,76,.08) 0%,var(--dark2) 100%);}
+.plan-badge{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--gold);color:var(--dark);padding:.22rem .9rem;border-radius:20px;font-size:.68rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;white-space:nowrap;}
+.plan-name{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:700;color:#fff;margin-bottom:.4rem;}
+.plan-price{font-family:'Cormorant Garamond',serif;font-size:2.6rem;font-weight:700;color:var(--gold);line-height:1;margin-bottom:.2rem;}
+.plan-price span{font-size:.9rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:400;}
+.plan-duration{font-size:.78rem;color:var(--muted);margin-bottom:1.2rem;}
+.plan-features{list-style:none;margin-bottom:1.5rem;}
+.plan-features li{padding:.42rem 0;font-size:.83rem;color:var(--muted);display:flex;align-items:center;gap:.6rem;border-bottom:1px solid rgba(255,255,255,.04);}
+.plan-features li::before{content:'✓';color:var(--gold);font-weight:700;flex-shrink:0;}
+.plan-features li.no::before{content:'✕';color:rgba(255,255,255,.15);}
+.plan-features li.no{opacity:.35;}
+
+/* ── RULES ── */
+.rules{background:var(--dark2);}
+.rules-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;}
+@media(max-width:600px){.rules-grid{grid-template-columns:1fr;}}
+.rule-item{display:flex;gap:.9rem;align-items:flex-start;background:var(--dark3);border-radius:12px;padding:1.1rem;border:1px solid rgba(255,255,255,.05);transition:border-color .2s;}
+.rule-item:hover{border-color:rgba(201,168,76,.2);}
+.rule-num{width:30px;height:30px;background:rgba(201,168,76,.1);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:var(--gold);flex-shrink:0;}
+.rule-text{font-size:.83rem;color:var(--muted);line-height:1.6;}
+.rule-text strong{color:var(--text);display:block;margin-bottom:.15rem;font-size:.87rem;}
+
+/* ── TESTIMONIALS ── */
+.testimonials{background:var(--dark);}
+.testi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:1.2rem;}
+@media(max-width:600px){.testi-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:420px){.testi-grid{grid-template-columns:1fr;}}
+.testi-card{background:var(--dark2);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:1.6rem;position:relative;transition:border-color .3s;}
+.testi-card:hover{border-color:rgba(201,168,76,.2);}
+.testi-card::before{content:'"';position:absolute;top:.8rem;right:1.2rem;font-family:'Cormorant Garamond',serif;font-size:4.5rem;color:rgba(201,168,76,.08);line-height:1;}
+.stars{color:var(--gold);font-size:.82rem;margin-bottom:.9rem;letter-spacing:2px;}
+.testi-text{font-size:.85rem;color:var(--muted);line-height:1.8;margin-bottom:1.3rem;font-style:italic;}
+.testi-author{display:flex;align-items:center;gap:.7rem;}
+.testi-avatar{width:38px;height:38px;border-radius:50%;object-fit:cover;border:2px solid rgba(201,168,76,.3);}
+.testi-name{font-size:.85rem;font-weight:600;color:var(--text);}
+.testi-role{font-size:.72rem;color:var(--muted);}
+
+/* ── CONTACT ── */
+.contact{background:var(--dark2);}
+.contact-grid{display:grid;grid-template-columns:1fr 1.1fr;gap:3rem;}
+@media(max-width:800px){.contact-grid{grid-template-columns:1fr;}}
+.contact-info h3{font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--gold);margin-bottom:1.3rem;}
+.c-item{display:flex;gap:.9rem;margin-bottom:1.1rem;align-items:flex-start;}
+.c-icon{width:38px;height:38px;background:rgba(201,168,76,.1);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+.c-label{font-size:.7rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:.15rem;}
+.c-val{font-size:.88rem;color:var(--text);}
+.c-val a{color:var(--gold);text-decoration:none;}
+.c-val a:hover{text-decoration:underline;}
+.map-thumb{margin-top:1.5rem;border-radius:12px;overflow:hidden;border:1px solid rgba(201,168,76,.15);cursor:pointer;display:block;text-decoration:none;}
+.map-thumb img{width:100%;height:180px;object-fit:cover;display:block;filter:brightness(.65) saturate(.5);transition:filter .3s;}
+.map-thumb:hover img{filter:brightness(.85) saturate(.7);}
+.map-label{background:var(--dark3);padding:.6rem 1rem;font-size:.78rem;color:var(--gold);display:flex;align-items:center;gap:.5rem;}
+.c-form{background:var(--dark3);border-radius:14px;padding:1.8rem;border:1px solid rgba(255,255,255,.06);}
+.c-form h3{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#fff;margin-bottom:.4rem;}
+.c-form p{color:var(--muted);font-size:.82rem;margin-bottom:1.5rem;}
+.form-row2{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;margin-bottom:.9rem;}
+@media(max-width:400px){.form-row2{grid-template-columns:1fr;}}
+.fg{display:flex;flex-direction:column;gap:.35rem;margin-bottom:.9rem;}
+.fg label{font-size:.7rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);}
+.fg input,.fg select,.fg textarea{background:var(--dark4);border:1px solid rgba(255,255,255,.08);border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.9rem;padding:.7rem .95rem;outline:none;transition:border-color .2s;width:100%;}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--gold);}
+.fg select option{background:var(--dark3);}
+.fg textarea{resize:vertical;min-height:95px;}
+
+/* ── FOOTER ── */
+footer{background:var(--dark);border-top:1px solid rgba(255,255,255,.06);padding:3rem 5vw 1.5rem;}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:2.5rem;margin-bottom:2.5rem;}
+@media(max-width:800px){.footer-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:450px){.footer-grid{grid-template-columns:1fr;gap:1.5rem;}}
+.footer-brand p{font-size:.82rem;color:var(--muted);line-height:1.8;margin-top:.9rem;max-width:270px;}
+.footer-col h4{font-size:.7rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;}
+.footer-col a{display:block;color:var(--muted);text-decoration:none;font-size:.84rem;margin-bottom:.65rem;transition:color .2s;}
+.footer-col a:hover{color:var(--text);}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.05);padding-top:1.3rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;}
+.footer-bottom p{font-size:.76rem;color:var(--muted);}
+.social-links{display:flex;gap:.6rem;}
+.social-link{width:34px;height:34px;background:rgba(255,255,255,.06);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;text-decoration:none;transition:background .2s,transform .2s;}
+.social-link:hover{background:rgba(201,168,76,.2);transform:translateY(-2px);}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--dark3);border:1px solid var(--gold);border-left:4px solid var(--gold);color:var(--text);padding:.9rem 1.3rem;border-radius:10px;box-shadow:0 10px 35px rgba(0,0,0,.5);transform:translateX(150%);transition:transform .3s ease;z-index:999;font-size:.87rem;max-width:280px;}
+.toast.show{transform:translateX(0);}
+
+/* ── REGISTER MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.82);backdrop-filter:blur(8px);z-index:500;display:none;align-items:center;justify-content:center;padding:1rem;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--dark2);border:1px solid rgba(201,168,76,.2);border-radius:18px;padding:2.2rem;max-width:440px;width:100%;animation:fadeUp .3s ease;position:relative;max-height:90vh;overflow-y:auto;}
+.modal h2{font-family:'Cormorant Garamond',serif;font-size:1.7rem;color:#fff;margin-bottom:.4rem;}
+.modal>p{color:var(--muted);font-size:.85rem;margin-bottom:1.8rem;}
+.modal-close{position:absolute;top:1rem;right:1rem;background:rgba(255,255,255,.06);border:none;color:var(--muted);font-size:1.1rem;cursor:pointer;border-radius:6px;padding:.3rem .65rem;transition:all .2s;}
+.modal-close:hover{color:var(--gold);background:rgba(201,168,76,.1);}
+
+/* ── SCROLL REVEAL ── */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .6s ease,transform .6s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+/* ── MOBILE FINE-TUNING ── */
+@media(max-width:768px){
+  .nav-links{display:none;}
+  .nav-hamburger{display:flex;}
+  section{padding:3.5rem 4vw;}
+  .hero{min-height:85vh;}
+  .hero-content{padding:2rem 4vw;}
+  .hero-stats{gap:.8rem;}
+  .hero-stat{padding:.8rem 1rem;}
+}
+@media(max-width:480px){
+  .hero h1{font-size:2.4rem;}
+  .section-title{font-size:1.7rem;}
+  .fac-body h3{font-size:1rem;}
+  .fac-body p{font-size:.78rem;}
+}
+</style>
+</head>
+<body>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker-label">📢 Notice</div>
+  <div class="ticker-track">
+    <span>Library will remain closed on national holidays — Check schedule at reception</span>
+    <span>New Discussion Room now open — Book your slot today!</span>
+    <span>Separate seating for Girls & Boys — Fully safe & secure environment</span>
+    <span>Monthly membership only ₹499 — Limited seats available!</span>
+    <span>Free High-Speed Wi-Fi for all members — Ask at reception</span>
+    <span>Morning batch 5:00 AM — Now open for enrollment</span>
+    <span>Free Parking available inside campus for all members</span>
+    <span>All competitive exam books available — SSC, SSC, JEE, NEET & more</span>
+    <span>Library will remain closed on national holidays — Check schedule at reception</span>
+    <span>New Discussion Room now open — Book your slot today!</span>
+    <span>Separate seating for Girls & Boys — Fully safe & secure environment</span>
+    <span>Monthly membership only ₹499 — Limited seats available!</span>
+    <span>Free High-Speed Wi-Fi for all members — Ask at reception</span>
+    <span>Morning batch 5:00 AM — Now open for enrollment</span>
+    <span>Free Parking available inside campus for all members</span>
+    <span>All competitive exam books available — SSC, SSC, JEE, NEET & more</span>
+  </div>
+</div>
+
+<!-- NAVBAR -->
+<nav>
+  <a class="nav-logo" href="#">
+    <!-- Logo will show when Logo.jpg is placed in same folder -->
+    <img src="Logo.jpg" alt="Budha Library" onerror="this.style.display='none';this.nextSibling.style.display='flex';">
+    <div style="display:none;width:42px;height:42px;background:var(--gold);border-radius:50%;align-items:center;justify-content:center;font-size:1.3rem;">📚</div>
+    <div class="nav-logo-text">Budha Library<small>Bodhgaya</small></div>
+  </a>
+  <div class="nav-links">
+    <a href="#facilities" onclick="closeDrawer()">Facilities</a>
+    <a href="#gallery" onclick="closeDrawer()">Gallery</a>
+    <a href="#timings" onclick="closeDrawer()">Timings</a>
+    <a href="#membership" onclick="closeDrawer()">Membership</a>
+    <a href="#rules" onclick="closeDrawer()">Rules</a>
+    <a href="#contact" onclick="closeDrawer()">Contact</a>
+    <a href="#" class="nav-cta" onclick="document.getElementById('registerModal').classList.add('open');closeDrawer();">Join Now</a>
+  </div>
+  <button class="nav-hamburger" id="hamburger" onclick="toggleDrawer()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MOBILE DRAWER -->
+<div class="mobile-drawer" id="mobileDrawer">
+  <div class="drawer-close"><button onclick="closeDrawer()">✕ Close</button></div>
+  <a href="#facilities" onclick="closeDrawer()">🏛️ Facilities</a>
+  <a href="#gallery" onclick="closeDrawer()">📸 Gallery</a>
+  <a href="#timings" onclick="closeDrawer()">🕐 Timings & Seats</a>
+  <a href="#membership" onclick="closeDrawer()">💳 Membership</a>
+  <a href="#rules" onclick="closeDrawer()">📋 Library Rules</a>
+  <a href="#contact" onclick="closeDrawer()">📞 Contact Us</a>
+  <a href="#" class="drawer-cta" onclick="document.getElementById('registerModal').classList.add('open');closeDrawer();">✨ Join Now</a>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Premium Study Space • Bodhgaya</div>
+    <h1>Where<br><em>Focus</em><br>Meets Future.</h1>
+    <p>Budha Library — a world-class quiet study space in Bodhgaya. AC halls, high-speed Wi-Fi, separate zones for girls & boys, free parking, and zero distractions.</p>
+    <div class="hero-btns">
+      <a href="#membership" class="btn-gold">📋 Get Membership</a>
+      <a href="#facilities" class="btn-outline">🏛️ Explore Library</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><span class="hero-stat-num">150+</span><div class="hero-stat-label">Study Seats</div></div>
+      <div class="hero-stat"><span class="hero-stat-num">4.7★</span><div class="hero-stat-label">Rating</div></div>
+      <div class="hero-stat"><span class="hero-stat-num">17hr</span><div class="hero-stat-label">Open Daily</div></div>
+      <div class="hero-stat"><span class="hero-stat-num">100%</span><div class="hero-stat-label">Safe & Secure</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FACILITIES -->
+<section class="facilities reveal" id="facilities">
+  <div class="section-header">
+    <div>
+      <span class="section-label">What We Offer</span>
+      <h2 class="section-title">World-Class<br><em>Facilities</em></h2>
+      <p class="section-desc">Everything a serious student needs — designed for maximum focus and comfort at Budha Library, Bodhgaya.</p>
+    </div>
+  </div>
+  <div class="fac-grid">
+    <div class="fac-card reveal">
+      <img class="fac-img" src="https://images.unsplash.com/photo-1568667256549-094345857aef?w=600&q=80" alt="AC Hall">
+      <div class="fac-body"><div class="fac-icon">❄️</div><h3>Fully Air Conditioned</h3><p>All study halls are fully AC — stay cool and focused even in peak summers. Comfortable seating with individual desks and reading lamps.</p><span class="fac-tag">3 AC Halls</span></div>
+    </div>
+    <div class="fac-card reveal">
+      <img class="fac-img" src="https://images.unsplash.com/photo-1517842645767-c639042777db?w=600&q=80" alt="Girls Zone">
+      <div class="fac-body"><div class="fac-icon">👩‍🎓</div><h3>Separate Girl's Row</h3><p>Dedicated and fully safe seating zone for girls — separate from boys section. Safe, secure, and comfortable environment for female students.</p><span class="fac-tag">Fully Safe Zone</span></div>
+    </div>
+    <div class="fac-card reveal">
+      <img class="fac-img" src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=600&q=80" alt="Wi-Fi">
+      <div class="fac-body"><div class="fac-icon">📶</div><h3>High-Speed Wi-Fi</h3><p>Blazing fast fiber internet throughout the campus. Stream video lectures, attempt online mock tests, and download study material without buffering.</p><span class="fac-tag">100 Mbps Fiber</span></div>
+    </div>
+    <div class="fac-card reveal">
+      <img class="fac-img" src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&q=80" alt="Discussion Room">
+      <div class="fac-body"><div class="fac-icon">🗣️</div><h3>Discussion Room</h3><p>Dedicated group discussion room where students can collaborate, practice GD rounds, solve problems together — without disturbing the silent halls.</p><span class="fac-tag">Bookable Slots</span></div>
+    </div>
+    <div class="fac-card reveal">
+      <img class="fac-img" src="https://images.unsplash.com/photo-1562564055-71e051d33c19?w=600&q=80" alt="Security">
+      <div class="fac-body"><div class="fac-icon">🔒</div><h3>24/7 Safe & Secure</h3><p>CCTV surveillance throughout the campus. Dedicated locker facility for members. Entry gate managed by staff — only members allowed.</p><span class="fac-tag">CCTV + Locker</span></div>
+    </div>
+    <div class="fac-card reveal">
+      <img class="fac-img" src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=600&q=80" alt="Books">
+      <div class="fac-body"><div class="fac-icon">📚</div><h3>All Type of Books</h3><p>Massive collection of books for SSC, SSC, JEE, NEET, State PSC, Banking, and more. Reference books, novels, magazines, and daily newspapers available.</p><span class="fac-tag">5000+ Books</span></div>
+    </div>
+    <div class="fac-card reveal">
+      <img class="fac-img" src="https://images.unsplash.com/photo-1550399105-c4db5fc37848?w=600&q=80" alt="Power">
+      <div class="fac-body"><div class="fac-icon">🔌</div><h3>Power Sockets & USB</h3><p>Every seat has power outlets and USB charging. Keep your laptop, tablet, and phone fully charged throughout your study session.</p><span class="fac-tag">Every Seat</span></div>
+    </div>
+    <div class="fac-card reveal">
+      <img class="fac-img" src="https://images.unsplash.com/photo-1521747116042-5a810fda9664?w=600&q=80" alt="RO Water">
+      <div class="fac-body"><div class="fac-icon">💧</div><h3>RO Drinking Water</h3><p>Pure RO filtered drinking water available free of cost for all members. Stay hydrated throughout your long study sessions.</p><span class="fac-tag">Free RO Water</span></div>
+    </div>
+    <div class="fac-card reveal">
+      <img class="fac-img" src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80" alt="Parking">
+      <div class="fac-body"><div class="fac-icon">🅿️</div><h3>Free Parking</h3><p>Spacious and safe parking area inside campus for bikes and cycles. No extra charges. Park and study without worry.</p><span class="fac-tag">Free for Members</span></div>
+    </div>
+    <div class="fac-card reveal">
+      <img class="fac-img" src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&q=80" alt="Newspaper">
+      <div class="fac-body"><div class="fac-icon">📰</div><h3>Daily Newspaper</h3><p>All major Hindi and English newspapers available daily — The Hindu, Dainik Jagran, Hindustan Times and more. Perfect for current affairs prep.</p><span class="fac-tag">Daily Updated</span></div>
+    </div>
+    <div class="fac-card reveal">
+      <img class="fac-img" src="https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?w=600&q=80" alt="Comfort">
+      <div class="fac-body"><div class="fac-icon">🛋️</div><h3>Comfort Zone</h3><p>Ergonomic chairs, proper ventilation, soft lighting, and a calm atmosphere — everything designed for long productive study sessions without fatigue.</p><span class="fac-tag">Ergonomic Seating</span></div>
+    </div>
+    <div class="fac-card reveal">
+      <img class="fac-img" src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&q=80" alt="Silent Room">
+      <div class="fac-body"><div class="fac-icon">🤫</div><h3>Silent Reading Room</h3><p>Zero-noise zone for deep concentrated study. Perfect for exam revision and last-minute preparation. Strict no-talking policy enforced.</p><span class="fac-tag">Strict Silence</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section class="gallery reveal" id="gallery">
+  <div class="section-header">
+    <div>
+      <span class="section-label">Our Memories</span>
+      <h2 class="section-title">Life at<br><em>Budha Library</em></h2>
+      <p class="section-desc">Moments, milestones, and memories from our students and campus.</p>
+    </div>
+  </div>
+
+  <!-- VIDEO -->
+  <div class="video-wrap reveal">
+    <video autoplay muted loop playsinline>
+      <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+      <!-- Replace above src with your actual library video file, e.g.: <source src="library_video.mp4" type="video/mp4"> -->
+      Your browser does not support the video tag.
+    </video>
+  </div>
+
+  <!-- PHOTO GALLERY -->
+  <!-- 
+    PHOTO NAMES — Place these files in the same folder as this HTML:
+    gallery1.jpg  — Main study hall
+    gallery2.jpg  — Reading room / students studying
+    gallery3.jpg  — AC hall interior
+    gallery4.jpg  — Book shelves
+    gallery5.jpg  — Student group photo
+    gallery6.jpg  — Discussion room
+    gallery7.jpg  — Entry gate / outside view
+    gallery8.jpg  — Night study session
+    gallery9.jpg  — Girls seating zone
+    student1.jpg  — Student photo 1 (for testimonials)
+    student2.jpg  — Student photo 2
+    student3.jpg  — Student photo 3
+  -->
+  <div class="gallery-grid" style="margin-top:1.5rem;">
+    <div class="gal-item reveal">
+      <img src="gallery1.jpg" onerror="this.src='https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=600&q=80'" alt="Main Study Hall">
+      <div class="gal-overlay"><span>Main Study Hall</span></div>
+    </div>
+    <div class="gal-item tall reveal">
+      <img src="gallery2.jpg" onerror="this.src='https://images.unsplash.com/photo-1568667256549-094345857aef?w=600&q=80'" alt="Students Studying">
+      <div class="gal-overlay"><span>Students at Work</span></div>
+    </div>
+    <div class="gal-item reveal">
+      <img src="gallery3.jpg" onerror="this.src='https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&q=80'" alt="AC Hall">
+      <div class="gal-overlay"><span>AC Study Hall</span></div>
+    </div>
+    <div class="gal-item reveal">
+      <img src="gallery4.jpg" onerror="this.src='https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=600&q=80'" alt="Books">
+      <div class="gal-overlay"><span>Our Book Collection</span></div>
+    </div>
+    <div class="gal-item reveal">
+      <img src="gallery5.jpg" onerror="this.src='https://images.unsplash.com/photo-1543269664-76bc3997d9ea?w=600&q=80'" alt="Students">
+      <div class="gal-overlay"><span>Our Students</span></div>
+    </div>
+    <div class="gal-item tall reveal">
+      <img src="gallery6.jpg" onerror="this.src='https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&q=80'" alt="Discussion Room">
+      <div class="gal-overlay"><span>Discussion Room</span></div>
+    </div>
+    <div class="gal-item reveal">
+      <img src="gallery7.jpg" onerror="this.src='https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=600&q=80'" alt="Library Entrance">
+      <div class="gal-overlay"><span>Library Entrance</span></div>
+    </div>
+    <div class="gal-item reveal">
+      <img src="gallery8.jpg" onerror="this.src='https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=600&q=80'" alt="Night Study">
+      <div class="gal-overlay"><span>Night Study Session</span></div>
+    </div>
+    <div class="gal-item reveal">
+      <img src="gallery9.jpg" onerror="this.src='https://images.unsplash.com/photo-1598618443855-232ee0f819f6?w=600&q=80'" alt="Girls Zone">
+      <div class="gal-overlay"><span>Girls Study Zone</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- TIMINGS & SEATS -->
+<section class="timings reveal" id="timings">
+  <div class="section-header">
+    <div>
+      <span class="section-label">Visit Us</span>
+      <h2 class="section-title">Timings &<br><em>Seat Status</em></h2>
+    </div>
+  </div>
+  <div class="tim-grid">
+    <div class="tim-card reveal">
+      <h3>🕐 Opening Hours</h3>
+      <div class="tim-row"><span class="tim-day">Monday – Friday</span><span class="tim-time">5:00 AM – 10:00 PM</span><span class="t-open">Open</span></div>
+      <div class="tim-row"><span class="tim-day">Saturday</span><span class="tim-time">5:00 AM – 9:00 PM</span><span class="t-open">Open</span></div>
+      <div class="tim-row"><span class="tim-day">Sunday</span><span class="tim-time">6:00 AM – 8:00 PM</span><span class="t-open">Open</span></div>
+      <div class="tim-row"><span class="tim-day">National Holidays</span><span class="tim-time">—</span><span class="t-closed">Closed</span></div>
+      <div style="margin-top:1.3rem;padding:1rem;background:rgba(201,168,76,.07);border-radius:10px;border:1px solid rgba(201,168,76,.15);">
+        <div style="font-size:.8rem;color:var(--gold);font-weight:600;margin-bottom:.5rem;">📞 Contact for Booking</div>
+        <div style="font-size:.87rem;color:var(--text);">+91 +91 86518 12686 / 73017 06380</div>
+        <div style="font-size:.78rem;color:var(--muted);margin-top:.3rem;">Near LFC Restaurants, Bodhgaya, Rajapur Mode</div>
+      </div>
+    </div>
+    <div class="tim-card reveal">
+      <h3>💺 Live Seat Availability</h3>
+      <div class="seat-grid">
+        <div class="seat-zone"><div class="seat-zone-name">form-row  A</div><div class="seat-zone-count many" id="s1">8</div><div class="seat-zone-total">/35 free</div></div>
+        <div class="seat-zone"><div class="seat-zone-name">form-row  B</div><div class="seat-zone-count few" id="s2">8</div><div class="seat-zone-total">/ 25 free</div></div>
+        <div class="seat-zone"><div class="seat-zone-name">form-row  C</div><div class="seat-zone-count many" id="s3">10</div><div class="seat-zone-total">/ 25 free</div></div>
+        <div class="seat-zone"><div class="seat-zone-name">Silent Room</div><div class="seat-zone-count full" id="s4">0</div><div class="seat-zone-total">/ 1 free</div></div>
+        <div class="seat-zone"><div class="seat-zone-name">Girls Zone</div><div class="seat-zone-count many" id="s5">18</div><div class="seat-zone-total">/ 60 free</div></div>
+        <div class="seat-zone"><div class="seat-zone-name">Disc. Room</div><div class="seat-zone-count few" id="s6">1</div><div class="seat-zone-total">/ 1 free</div></div>
+      </div>
+      <p style="font-size:.72rem;color:var(--muted);margin-top:1rem;">🟢 Available &nbsp; 🟡 Few seats &nbsp; 🔴 Full — Updates every 15 min</p>
+    </div>
+  </div>
+</section>
+
+<!-- MEMBERSHIP -->
+<section class="membership reveal" id="membership">
+  <div class="section-header">
+    <div>
+      <span class="section-label">Join Us Today</span>
+      <h2 class="section-title">Simple<br><em>Pricing Plans</em></h2>
+      <p class="section-desc">Choose a plan that fits your preparation schedule. No hidden charges. Walk in or call us!</p>
+    </div>
+  </div>
+  <div class="plans-grid">
+  <div class="plan-card reveal">
+    <div class="plan-name">Daily Pass</div>
+    <div class="plan-price"><span style="text-decoration: line-through;">₹50</span> ₹25<span>/day</span></div>
+    <div class="plan-duration">Single day — 5 AM to 10 PM</div>
+    <ul class="plan-features">
+      <li>Any available seat</li>
+      <li>Wi-Fi access</li>
+      <li>Power socket</li>
+      <li>RO Drinking water</li>
+      <li class="no">Locker facility</li>
+      <li class="no">Reserved seat</li>
+    </ul>
+    <div style="color: green; font-weight:bold;">You save ₹25!</div>
+    <button class="btn-outline" onclick="selectPlan('Daily Pass – ₹25')" style="width:100%;justify-content:center;">Get Pass</button>
+  </div>
+
+  <div class="plan-card featured reveal">
+    <div class="plan-badge">Premium</div>
+    <div class="plan-name">Monthly</div>
+    <div class="plan-price"><span style="text-decoration: line-through;">₹999</span> ₹499<span>/month</span></div>
+    <div class="plan-duration">30 days unlimited access</div>
+    <ul class="plan-features">
+      <li>Reserved seat option</li>
+      <li>Wi-Fi access</li>
+      <li>Power socket</li>
+      <li>RO Drinking water</li>
+      <li>Locker facility</li>
+      <li>Morning batch access</li>
+    </ul>
+    <div style="color: green; font-weight:bold;">You save ₹500!</div>
+    <button class="btn-gold" onclick="selectPlan('Monthly – ₹499')" style="width:100%;justify-content:center;">Get Membership</button>
+  </div>
+
+  <div class="plan-card featured reveal" style="border-color: lightgreen;">
+    <div class="plan-badge">Most Popular</div>
+    <div class="plan-name">3 Months</div>
+    <div class="plan-price"><span style="text-decoration: line-through;">₹2399</span> ₹1399<span>/3mo</span></div>
+    <div class="plan-duration">Best for serious aspirants</div>
+    <ul class="plan-features">
+      <li>Reserved seat guaranteed</li>
+      <li>Priority Wi-Fi</li>
+      <li>Power socket</li>
+      <li>Free locker</li>
+      <li>Discussion room access</li>
+      <li>Priority entry</li>
+      <li>RO Drinking water</li>
+      <li>Locker facility</li>
+    </ul>
+    <div style="color: green; font-weight:bold;">You save ₹1000!</div>
+    <button class="btn-outline" onclick="selectPlan('3 Months – ₹1399')" style="width:100%;justify-content:center;">Get Plan</button>
+  </div>
+
+  <div class="plan-card reveal">
+    <div class="plan-name">Annual</div>
+    <div class="plan-price"><span style="text-decoration: line-through;">₹9999</span> ₹4999<span>/year</span></div>
+    <div class="plan-duration">Full year — Best value!</div>
+    <ul class="plan-features">
+      <li>Permanent reserved seat</li>
+      <li>Priority Wi-Fi</li>
+      <li>Free locker</li>
+      <li>Discussion room priority</li>
+      <li>Guest pass ×5</li>
+      <li>All facilities included</li>
+    </ul>
+    <div style="color: green; font-weight:bold;">You save ₹5000!</div>
+    <button class="btn-outline" onclick="selectPlan('Annual – ₹4999')" style="width:100%;justify-content:center;">Get Plan</button>
+  </div>
+</div>
+</section>
+
+<!-- RULES -->
+<section class="rules reveal" id="rules">
+  <div class="section-header">
+    <div>
+      <span class="section-label">Library Policy</span>
+      <h2 class="section-title">Rules &<br><em>Regulations</em></h2>
+      <p class="section-desc">Please follow these rules to maintain a peaceful environment for all students at Budha Library.</p>
+    </div>
+  </div>
+  <div class="rules-grid">
+    <div class="rule-item reveal"><div class="rule-num">01</div><div class="rule-text"><strong>Complete Silence</strong>Talking, whispering, and phone calls are strictly prohibited inside study halls. Use mobile phones only in designated areas outside.</div></div>
+    <div class="rule-item reveal"><div class="rule-num">02</div><div class="rule-text"><strong>No Food Inside</strong>Eating inside study halls is not allowed. Use the canteen area for snacks and meals. Water bottles are permitted at your desk.</div></div>
+    <div class="rule-item reveal"><div class="rule-num">03</div><div class="rule-text"><strong>Separate Zones</strong>Boys and girls have dedicated separate seating zones. Crossing into the opposite zone is strictly not permitted for safety and comfort of all students.</div></div>
+    <div class="rule-item reveal"><div class="rule-num">05</div><div class="rule-text"><strong>Electronic Devices</strong>Laptops, tablets, and headphones are allowed. Device sound must be muted. Earphones must be used at low volume. Sharing/charging others' devices at your seat is not allowed.</div></div>
+    <div class="rule-item reveal"><div class="rule-num">06</div><div class="rule-text"><strong>Cleanliness</strong>Keep your desk and surroundings clean. Dispose of waste in dustbins only. Any damage to library property will be charged to the responsible member.</div></div>
+    <div class="rule-item reveal"><div class="rule-num">07</div><div class="rule-text"><strong>Seat Reservation</strong>You cannot hold seats for absent friends. Unoccupied reserved seats will be released after 30 minutes. Seat swapping is not allowed without staff permission.</div></div>
+    <div class="rule-item reveal"><div class="rule-num">08</div><div class="rule-text"><strong>Discussion Room Rules</strong>Discussion room must be booked in advance. Group discussions allowed here only — not in study halls. Maximum 8 students per slot. Time limit: 2 hours.</div></div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials reveal" id="testimonials">
+  <div class="section-header">
+    <div>
+      <span class="section-label">Student Reviews</span>
+      <h2 class="section-title">What Students<br><em>Say About Us</em></h2>
+    </div>
+  </div>
+<div class="testi-grid">
+    <div class="testi-card reveal">
+        <div class="stars">★★★★★</div>
+        <p class="testi-text">Budha Library ne meri SSC preparation ko ek naya direction diya. AC hall, peaceful environment, aur fast Wi-Fi — sab kuch perfect hai. Pawan Sir ka support bhi bohot helpful hai!</p>
+        <div class="testi-author">
+            <img class="testi-avatar" src="student1.jpg" onerror="this.src='https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=80&q=80'" alt="Rohan">
+            <div><div class="testi-name">Rohan Kumar</div><div class="testi-role">SSC Aspirant, BodhGaya</div></div>
+        </div>
+    </div>
+    <div class="testi-card reveal">
+        <div class="stars">★★★★★</div>
+        <p class="testi-text">Girls ke liye alag aur safe zone hai, isliye mujhe bohot comfortable feel hota hai. Wi-Fi itna fast hai ki online mock tests bina buffering ke hote hain. Best library in Bodhgaya!</p>
+        <div class="testi-author">
+            <img class="testi-avatar" src="student2.jpg" onerror="this.src='https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&q=80'" alt="Priya">
+            <div><div class="testi-name">Sweta</div><div class="testi-role">12th Student</div></div>
+        </div>
+    </div>
+    <div class="testi-card reveal">
+        <div class="stars">★★★★☆</div>
+        <p class="testi-text">Morning 5 AM batch se main 3 ghante college se pehle padh leta hoon. Free parking bhi hai to bike leke aana easy hai. Discussion room bhi bohot helpful hai group study ke liye!</p>
+        <div class="testi-author">
+            <img class="testi-avatar" src="student3.jpg" onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&q=80'" alt="Amit">
+            <div><div class="testi-name">Amit Singh</div><div class="testi-role">JEE Aspirant, Bodh Gaya</div></div>
+        </div>
+    </div>
+    <!-- New Testimonial Card -->
+    <div class="testi-card reveal">
+        <div class="stars">★★★★★</div>
+        <p class="testi-text">Library ka environment bohot peaceful hai. AC hall aur proper lighting se padhai aur productive ho jati hai. Staff bhi friendly aur helpful hai. Truly recommended!</p>
+        <div class="testi-author">
+            <img class="testi-avatar" src="student4.jpg" onerror="this.src='https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=80&q=80'" alt="Neha">
+            <div><div class="testi-name">Sweeti </div><div class="testi-role">12th class student  (Bodh Gaya ) </div></div>
+        </div>
+    </div>
+</div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact reveal" id="contact">
+  <span class="section-label">Get In Touch</span>
+  <h2 class="section-title" style="margin-bottom:2.5rem;">Visit Us or<br><em>Enquire Now</em></h2>
+  <div class="contact-grid">
+    <div class="contact-info">
+      <h3>📍 Budha Library Info</h3>
+      <div class="c-item">
+        <div class="c-icon">📍</div>
+        <div><div class="c-label">Address</div><div class="c-val">Near LFC Restaurants, Bodhgaya, Rajapur Mode, Bihar – 824231</div></div>
+      </div>
+      <div class="c-item">
+        <div class="c-icon">📞</div>
+        <div><div class="c-label">Phone Numbers</div><div class="c-val"><a href="tel:+91+91 86518 12686">+91 +91 86518 12686</a> &nbsp;/&nbsp; <a href="tel:+917301706380">+91 73017 06380</a></div></div>
+      </div>
+      <div class="c-item">
+        <div class="c-icon">🕐</div>
+        <div><div class="c-label">Hours</div><div class="c-val">Mon–Sat: 5 AM – 10 PM &nbsp;|&nbsp; Sun: 6 AM – 8 PM</div></div>
+      </div>
+      <div class="c-item">
+        <div class="c-icon">👨‍💼</div>
+        <div><div class="c-label">Owner</div><div class="c-val">Pawan Sir &nbsp;|&nbsp; <a href="https://youtube.com/@pawansir02?si=0NSU-GTuSabdR9_X" target="_blank">YouTube ↗</a> &nbsp;|&nbsp; <a href="https://www.instagram.com/pawanyadav02?igsh=MTZrZGQ5d2dvYTR5aA==" target="_blank">Instagram ↗</a></div></div>
+      </div>
+      
+     
+      <a class="map-thumb" href="https://share.google/2tOymUM4FMesvTkiE" target="_blank" rel="noopener">
+        <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=600&q=80" alt="Map">
+        <div class="map-label">📍 Open in Google Maps — Budha Library, Bodhgaya</div>
+      </a>
+    </div>
+    <div class="c-form reveal">
+      <h3>Send Enquiry</h3>
+      <p>Fill the form — your message will go directly to WhatsApp!</p>
+      <div class="form-row2">
+        <div class="fg"><label>Your Name</label><input type="text" id="cName" placeholder="Full name"></div>
+        <div class="fg"><label>Mobile Number</label><input type="text" id="cPhone" placeholder="10-digit number"></div>
+      </div>
+      <div class="fg">
+        <label>Interested In</label>
+        <select id="cPlan">
+          <option>Daily Pass – ₹25</option>
+          <option>Monthly Membership – ₹499</option>
+          <option>3 Month Plan – ₹1399</option>
+          <option>Annual Plan – ₹4999</option>
+          <option>Discussion Room Booking</option>
+          <option>General Enquiry</option>
+        </select>
+      </div>
+      <div class="fg"><label>Your Message</label><textarea id="cMsg" placeholder="Write your query or question..."></textarea></div>
+      <button class="btn-gold" style="width:100%;justify-content:center;" onclick="sendWhatsApp()">💬 Send on WhatsApp →</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="nav-logo" style="gap:.6rem;">
+        <img src="Logo." alt="Logo" style="height:38px;width:38px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);" onerror="this.style.display='none';">
+        <div class="nav-logo-text">Budha Library<small>Bodhgaya, Bihar</small></div>
+      </div>
+      <p>A premium study space for serious students. Quiet, comfortable, fully AC — with everything you need to crack your exam. Bodhgaya's most trusted library.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <a href="#facilities">Facilities</a>
+      <a href="#gallery">Gallery</a>
+      <a href="#timings">Timings</a>
+      <a href="#membership">Membership</a>
+      <a href="#rules">Library Rules</a>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <a href="tel:+91+91 86518 12686">📞 +91 86518 12686</a>
+      <a href="tel:+918651812686">📞 8651812686</a>
+      <a href="mailto:pawansir@23456gmail.com">✉️ Email Us</a>
+      <a href="https://share.google/2tOymUM4FMesvTkiE" target="_blank">📍 Get Directions</a>
+    </div>
+    <div class="footer-col">
+      <h4>Follow Us</h4>
+      <a href="https://www.instagram.com/budha_library?igsh=MTB1NmQ3aGQyZDhuaA==" target="_blank">📸 Instagram (Library)</a>
+      <a href="https://www.instagram.com/pawanyadav02?igsh=MTZrZGQ5d2dvYTR5aA==" target="_blank">📸 Pawan Sir</a>
+      <a href="https://youtube.com/@pawansir02?si=0NSU-GTuSabdR9_X" target="_blank">▶️ YouTube</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p><p>© 2026 Budha Library, Bodhgaya. Made with ❤️ by Pawan Sir<br><span style="font-size:0.8rem; color:#38373b;">Budha Libray</span></p></p>
+    <div class="social-links">
+      <a class="social-link" href="https://www.instagram.com/budha_library?igsh=MTB1NmQ3aGQyZDhuaA==" target="_blank" title="Library Instagram">📸</a>
+      <a class="social-link" href="https://www.instagram.com/pawanyadav02?igsh=MTZrZGQ5d2dvYTR5aA==" target="_blank" title="Pawan Sir Instagram">👤</a>
+      <a class="social-link" href="https://youtube.com/@pawansir02?si=0NSU-GTuSabdR9_X" target="_blank" title="YouTube">▶️</a>
+      <a class="social-link" href="https://wa.me/91+91 86518 12686" target="_blank" title="WhatsApp">💬</a>
+    </div>
+  </div>
+</footer>
+
+<!-- REGISTER MODAL -->
+<div class="modal-overlay" id="registerModal">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('registerModal').classList.remove('open')">✕</button>
+    <h2>Join Budha Library</h2>
+    <p>Register now — we will contact you to confirm your seat!</p>
+    <div class="fg"><label>Full Name</label><input type="text" id="regName" placeholder="Your full name"></div>
+    <div class="fg"><label>Mobile Number</label><input type="text" id="regPhone" placeholder="+91 XXXXX XXXXX"></div>
+    <div class="fg">
+      <label>Select Plan</label>
+      <select id="regPlan">
+        <option>Daily Pass – ₹25</option>
+        <option>Monthly – ₹499</option>
+        <option>3 Months – ₹1399</option>
+        <option>Annual – ₹4999</option>
+      </select>
+    </div>
+    <div class="fg"><label>Exam Preparing For</label><input type="text" id="regExam" placeholder="e.g. SSC, SSC, JEE, NEET..."></div>
+    <button class="btn-gold" style="width:100%;justify-content:center;margin-top:.5rem;" onclick="registerWhatsApp()">💬 Register via WhatsApp →</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── HAMBURGER / DRAWER ───
+function toggleDrawer(){
+  const d=document.getElementById('mobileDrawer');
+  const h=document.getElementById('hamburger');
+  d.classList.toggle('open');
+  h.classList.toggle('open');
+}
+function closeDrawer(){
+  document.getElementById('mobileDrawer').classList.remove('open');
+  document.getElementById('hamburger').classList.remove('open');
+}
+document.addEventListener('click',function(e){
+  const d=document.getElementById('mobileDrawer');
+  const h=document.getElementById('hamburger');
+  if(d.classList.contains('open')&&!d.contains(e.target)&&!h.contains(e.target)){closeDrawer();}
+});
+
+// ─── SCROLL REVEAL ───
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');}});
+},{threshold:0.08});
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+
+// ─── SEAT LIVE UPDATE ───
+function updateSeats(){
+  const seats=[
+    {id:'s1',max:80},{id:'s2',max:60},{id:'s3',max:100},
+    {id:'s4',max:40},{id:'s5',max:60},{id:'s6',max:20}
+  ];
+  seats.forEach(s=>{
+    const el=document.getElementById(s.id);if(!el)return;
+    let v=parseInt(el.textContent);
+    v=Math.max(0,Math.min(s.max,v+Math.floor(Math.random()*5)-2));
+    el.textContent=v;
+    el.className='seat-zone-count '+(v===0?'full':v<=8?'few':'many');
+  });
+}
+setInterval(updateSeats,9000);
+
+// ─── TOAST ───
+let toastTimer;
+function toast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>el.classList.remove('show'),3500);
+}
+
+// ─── WHATSAPP ENQUIRY ───
+function sendWhatsApp(){
+  const name=document.getElementById('cName').value.trim();
+  const phone=document.getElementById('cPhone').value.trim();
+  const plan=document.getElementById('cPlan').value;
+  const msg=document.getElementById('cMsg').value.trim();
+  if(!name||!phone){toast('⚠️ Please fill your name and phone number.');return;}
+  const text=`Hello Budha Library! 👋\n\n*Name:* ${name}\n*Phone:* ${phone}\n*Interested In:* ${plan}\n*Message:* ${msg||'No additional message'}\n\nPlease confirm my enquiry. Thank you!`;
+  const url='https://wa.me/91+91 86518 12686?text='+encodeURIComponent(text);
+  window.open(url,'_blank');
+  toast('✅ Opening WhatsApp with your message!');
+  ['cName','cPhone','cMsg'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+}
+
+// ─── WHATSAPP REGISTER ───
+function registerWhatsApp(){
+  const name=document.getElementById('regName').value.trim();
+  const phone=document.getElementById('regPhone').value.trim();
+  const plan=document.getElementById('regPlan').value;
+  const exam=document.getElementById('regExam').value.trim();
+  if(!name||!phone){toast('⚠️ Please fill your name and phone number.');return;}
+  const text=`Hello Budha Library! 🙏\n\nMain membership lena chahta/chahti hoon.\n\n*Name:* ${name}\n*Phone:* ${phone}\n*Plan:* ${plan}\n*Exam:* ${exam||'Not specified'}\n\nKripya meri seat confirm kar dijiye. Thank you!`;
+  const url='https://wa.me/91+91 86518 12686?text='+encodeURIComponent(text);
+  window.open(url,'_blank');
+  document.getElementById('registerModal').classList.remove('open');
+  toast('🎉 Opening WhatsApp! Register kar lo '+name+' ji!');
+}
+
+// ─── SELECT PLAN ───
+function selectPlan(plan){
+  document.getElementById('regPlan').value=plan;
+  document.getElementById('registerModal').classList.add('open');
+}
+
+// ─── MODAL CLOSE ON OUTSIDE CLICK ───
+document.querySelectorAll('.modal-overlay').forEach(m=>{
+  m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');});
+});
+
+// ─── SMOOTH SCROLL FOR NAV LINKS ───
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',function(e){
+    const target=document.querySelector(this.getAttribute('href'));
+    if(target){e.preventDefault();target.scrollIntoView({behavior:'smooth',block:'start'});}
+  });
+});
+</script>
+</body>
+</html>
