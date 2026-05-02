@@ -64,9 +64,15 @@ nav{background:rgba(13,13,13,.97);backdrop-filter:blur(20px);border-bottom:1px s
 .hero-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(13,13,13,.95) 0%,rgba(13,13,13,.55) 55%,transparent 100%);}
 .hero-content{position:relative;z-index:2;padding:3rem 5vw;max-width:780px;animation:fadeUp .9s ease both;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(35px);}to{opacity:1;transform:translateY(0);}}
-.hero-tag{display:inline-flex;align-items:center;gap:.55rem;background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.3);color:var(--gold);padding:.38rem .95rem;border-radius:30px;font-size:.72rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;margin-bottom:1.3rem;}
-.hero-tag::before{content:'';width:6px;height:6px;background:var(--gold);border-radius:50%;animation:pulse 1.5s infinite;}
+
+/* ── HERO TAG CLICKABLE ── */
+.hero-tag{display:inline-flex;align-items:center;gap:.55rem;background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.3);color:var(--gold);padding:.38rem .95rem;border-radius:30px;font-size:.72rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;margin-bottom:1.3rem;text-decoration:none;cursor:pointer;transition:all .3s;position:relative;overflow:hidden;}
+.hero-tag::after{content:'';position:absolute;inset:0;background:rgba(201,168,76,.15);opacity:0;transition:opacity .3s;border-radius:30px;}
+.hero-tag:hover{background:rgba(201,168,76,.25);border-color:var(--gold);box-shadow:0 0 18px rgba(201,168,76,.4);transform:translateY(-1px);}
+.hero-tag:hover::after{opacity:1;}
+.hero-tag .dot{width:6px;height:6px;background:var(--gold);border-radius:50%;animation:pulse 1.5s infinite;flex-shrink:0;}
 @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+
 .hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(2.6rem,7vw,5.5rem);font-weight:700;line-height:1.06;margin-bottom:1.2rem;color:#fff;}
 .hero h1 em{font-style:italic;color:var(--gold);}
 .hero p{font-size:1.05rem;color:rgba(232,224,208,.75);max-width:500px;margin-bottom:2rem;font-weight:300;line-height:1.85;}
@@ -76,9 +82,29 @@ nav{background:rgba(13,13,13,.97);backdrop-filter:blur(20px);border-bottom:1px s
 .btn-outline{background:transparent;color:var(--text);padding:.85rem 1.8rem;border:1.5px solid rgba(255,255,255,.22);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:500;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:.5rem;transition:all .25s;}
 .btn-outline:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-2px);}
 .hero-stats{display:flex;gap:1.2rem;flex-wrap:wrap;margin-top:2.5rem;}
-.hero-stat{background:rgba(22,22,22,.88);border:1px solid rgba(201,168,76,.2);backdrop-filter:blur(10px);border-radius:12px;padding:1rem 1.4rem;text-align:center;}
-.hero-stat-num{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:700;color:var(--gold);display:block;line-height:1;}
+
+/* ── HERO STAT — normal ── */
+.hero-stat{background:rgba(22,22,22,.88);border:1px solid rgba(201,168,76,.2);backdrop-filter:blur(10px);border-radius:12px;padding:1rem 1.4rem;text-align:center;transition:all .3s;}
+
+/* ── HERO STAT CLICKABLE ── */
+.hero-stat.clickable{cursor:pointer;text-decoration:none;display:block;position:relative;overflow:hidden;}
+.hero-stat.clickable::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(201,168,76,.15),rgba(201,168,76,.05));opacity:0;transition:opacity .3s;border-radius:12px;}
+.hero-stat.clickable:hover{border-color:var(--gold);box-shadow:0 0 22px rgba(201,168,76,.35);transform:translateY(-3px) scale(1.04);}
+.hero-stat.clickable:hover::before{opacity:1;}
+.hero-stat.clickable:hover .hero-stat-num{color:var(--gold2);}
+.hero-stat.clickable .click-hint{display:block;font-size:.6rem;color:rgba(201,168,76,.5);letter-spacing:1px;text-transform:uppercase;margin-top:.25rem;transition:color .2s;}
+.hero-stat.clickable:hover .click-hint{color:var(--gold);}
+
+.hero-stat-num{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:700;color:var(--gold);display:block;line-height:1;transition:color .2s;}
 .hero-stat-label{font-size:.68rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:.3rem;}
+
+/* ── LINK OVERLAY ANIMATION ── */
+.link-flash{position:fixed;inset:0;z-index:9999;background:radial-gradient(circle at center,rgba(201,168,76,.25),rgba(13,13,13,.95));display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s;}
+.link-flash.show{opacity:1;pointer-events:auto;}
+.link-flash-inner{text-align:center;}
+.link-flash-inner .lf-icon{font-size:3rem;animation:lfBounce .5s ease;}
+.link-flash-inner .lf-text{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--gold);margin-top:.6rem;}
+@keyframes lfBounce{0%{transform:scale(.5);opacity:0;}70%{transform:scale(1.15);}100%{transform:scale(1);opacity:1;}}
 
 /* ── SECTIONS ── */
 section{padding:5rem 5vw;}
@@ -261,6 +287,14 @@ footer{background:var(--dark);border-top:1px solid rgba(255,255,255,.06);padding
 </head>
 <body>
 
+<!-- LINK FLASH OVERLAY -->
+<div class="link-flash" id="linkFlash">
+  <div class="link-flash-inner">
+    <div class="lf-icon">📚</div>
+    <div class="lf-text">Budha Library khul rahi hai...</div>
+  </div>
+</div>
+
 <!-- TICKER -->
 <div class="ticker-wrap">
   <div class="ticker-label">📢 Notice</div>
@@ -287,7 +321,6 @@ footer{background:var(--dark);border-top:1px solid rgba(255,255,255,.06);padding
 <!-- NAVBAR -->
 <nav>
   <a class="nav-logo" href="#">
-    <!-- Logo will show when Logo.jpg is placed in same folder -->
     <img src="Logo.jpg" alt="Budha Library" onerror="this.style.display='none';this.nextSibling.style.display='flex';">
     <div style="display:none;width:42px;height:42px;background:var(--gold);border-radius:50%;align-items:center;justify-content:center;font-size:1.3rem;">📚</div>
     <div class="nav-logo-text">Budha Library<small>Bodhgaya</small></div>
@@ -323,17 +356,31 @@ footer{background:var(--dark);border-top:1px solid rgba(255,255,255,.06);padding
   <div class="hero-bg"></div>
   <div class="hero-overlay"></div>
   <div class="hero-content">
-    <div class="hero-tag">Premium Study Space • Bodhgaya</div>
+
+    <!-- CLICKABLE HERO TAG -->
+    <a class="hero-tag" href="javascript:void(0)" onclick="openLibraryLink()">
+      <span class="dot"></span>
+      Premium Study Space • Bodhgaya
+    </a>
+
     <h1>Where<br><em>Focus</em><br>Meets Future.</h1>
     <p>Budha Library — a Best-class quiet study space in Bodhgaya. AC halls, high-speed Wi-Fi, separate zones for girls & boys, free parking, and zero distractions.</p>
     <div class="hero-btns">
       <a href="#membership" class="btn-gold">📋 Get Membership</a>
       <a href="#facilities" class="btn-outline">🏛️ Explore Library</a>
     </div>
+
     <div class="hero-stats">
       <div class="hero-stat"><span class="hero-stat-num">150+</span><div class="hero-stat-label">Study Seats</div></div>
       <div class="hero-stat"><span class="hero-stat-num">4.7★</span><div class="hero-stat-label">Rating</div></div>
-      <div class="hero-stat"><span class="hero-stat-num">17hr</span><div class="hero-stat-label">Open Daily</div></div>
+
+      <!-- CLICKABLE: 17hr Open Daily -->
+      <a class="hero-stat clickable" href="javascript:void(0)" onclick="openLibraryLink()">
+        <span class="hero-stat-num">17hr</span>
+        <div class="hero-stat-label">Open Daily</div>
+        <span class="click-hint">↗</span>
+      </a>
+
       <div class="hero-stat"><span class="hero-stat-num">100%</span><div class="hero-stat-label">Safe & Secure</div></div>
     </div>
   </div>
@@ -349,54 +396,18 @@ footer{background:var(--dark);border-top:1px solid rgba(255,255,255,.06);padding
     </div>
   </div>
   <div class="fac-grid">
-    <div class="fac-card reveal">
-      <img class="fac-img" src="1.jpg" alt="AC Hall">
-      <div class="fac-body"><div class="fac-icon">❄️</div><h3>Fully Air Conditioned</h3><p>All study halls are fully AC — stay cool and focused even in peak summers. Comfortable seating with individual desks and reading lamps.</p><span class="fac-tag">3 AC Halls</span></div>
-    </div>
-    <div class="fac-card reveal">
-      <img class="fac-img" src="Separate Girl's Row.jpg" alt="Girls Zone">
-      <div class="fac-body"><div class="fac-icon">👩‍🎓</div><h3>Separate Girl's Row</h3><p>Dedicated and fully safe seating zone for girls — separate from boys section. Safe, secure, and comfortable environment for female students.</p><span class="fac-tag">Fully Safe Zone</span></div>
-    </div>
-    <div class="fac-card reveal">
-      <img class="fac-img" src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=600&q=80" alt="Wi-Fi">
-      <div class="fac-body"><div class="fac-icon">📶</div><h3>High-Speed Wi-Fi</h3><p>Blazing fast fiber internet throughout the campus. Stream video lectures, attempt online mock tests, and download study material without buffering.</p><span class="fac-tag">100 Mbps Fiber</span></div>
-    </div>
-    <div class="fac-card reveal">
-      <img class="fac-img" src="Discussion Room.jpg" alt="Discussion Room">
-      <div class="fac-body"><div class="fac-icon">🗣️</div><h3>Discussion Room</h3><p>Dedicated group discussion room where students can collaborate, practice GD rounds, solve problems together — without disturbing the silent halls.</p><span class="fac-tag">Bookable Slots</span></div>
-    </div>
-    <div class="fac-card reveal">
-      <img class="fac-img" src="https://images.unsplash.com/photo-1562564055-71e051d33c19?w=600&q=80" alt="Security">
-      <div class="fac-body"><div class="fac-icon">🔒</div><h3>24/7 Safe & Secure</h3><p>CCTV surveillance throughout the campus. Dedicated locker facility for members. Entry gate managed by staff — only members allowed.</p><span class="fac-tag">CCTV + Locker</span></div>
-    </div>
-    <div class="fac-card reveal">
-      <img class="fac-img" src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=600&q=80" alt="Books">
-      <div class="fac-body"><div class="fac-icon">📚</div><h3>All Type of Books</h3><p>Massive collection of books for SSC, SSC, JEE, NEET, State PSC, Banking, and more. Reference books, novels, magazines, and daily newspapers available.</p><span class="fac-tag">5000+ Books</span></div>
-    </div>
-    <div class="fac-card reveal">
-      <img class="fac-img" src="https://images.unsplash.com/photo-1550399105-c4db5fc37848?w=600&q=80" alt="Power">
-      <div class="fac-body"><div class="fac-icon">🔌</div><h3>Power Sockets & USB</h3><p>Every seat has power outlets and USB charging. Keep your laptop, tablet, and phone fully charged throughout your study session.</p><span class="fac-tag">Every Seat</span></div>
-    </div>
-    <div class="fac-card reveal">
-      <img class="fac-img" src="ro.jpg" alt="RO Water">
-      <div class="fac-body"><div class="fac-icon">💧</div><h3>RO Drinking Water</h3><p>Pure RO filtered drinking water available free of cost for all members. Stay hydrated throughout your long study sessions.</p><span class="fac-tag">Free RO Water</span></div>
-    </div>
-    <div class="fac-card reveal">
-      <img class="fac-img" src="parking .jpeg" alt="Parking">
-      <div class="fac-body"><div class="fac-icon">🅿️</div><h3>Free Parking</h3><p>Spacious and safe parking area inside campus for bikes and cycles. No extra charges. Park and study without worry.</p><span class="fac-tag">Free for Members</span></div>
-    </div>
-    <div class="fac-card reveal">
-      <img class="fac-img" src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&q=80" alt="Newspaper">
-      <div class="fac-body"><div class="fac-icon">📰</div><h3>Daily Newspaper</h3><p>All major Hindi and English newspapers available daily — The Hindu, Dainik Jagran, Hindustan Times and more. Perfect for current affairs prep.</p><span class="fac-tag">Daily Updated</span></div>
-    </div>
-    <div class="fac-card reveal">
-      <img class="fac-img" src="https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?w=600&q=80" alt="Comfort">
-      <div class="fac-body"><div class="fac-icon">🛋️</div><h3>Comfort Zone</h3><p>Ergonomic chairs, proper ventilation, soft lighting, and a calm atmosphere — everything designed for long productive study sessions without fatigue.</p><span class="fac-tag">Ergonomic Seating</span></div>
-    </div>
-    <div class="fac-card reveal">
-      <img class="fac-img" src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&q=80" alt="Silent Room">
-      <div class="fac-body"><div class="fac-icon">🤫</div><h3>Silent Reading Room</h3><p>Zero-noise zone for deep concentrated study. Perfect for exam revision and last-minute preparation. Strict no-talking policy enforced.</p><span class="fac-tag">Strict Silence</span></div>
-    </div>
+    <div class="fac-card reveal"><img class="fac-img" src="1.jpg" alt="AC Hall"><div class="fac-body"><div class="fac-icon">❄️</div><h3>Fully Air Conditioned</h3><p>All study halls are fully AC — stay cool and focused even in peak summers. Comfortable seating with individual desks and reading lamps.</p><span class="fac-tag">3 AC Halls</span></div></div>
+    <div class="fac-card reveal"><img class="fac-img" src="Separate Girl's Row.jpg" alt="Girls Zone"><div class="fac-body"><div class="fac-icon">👩‍🎓</div><h3>Separate Girl's Row</h3><p>Dedicated and fully safe seating zone for girls — separate from boys section. Safe, secure, and comfortable environment for female students.</p><span class="fac-tag">Fully Safe Zone</span></div></div>
+    <div class="fac-card reveal"><img class="fac-img" src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=600&q=80" alt="Wi-Fi"><div class="fac-body"><div class="fac-icon">📶</div><h3>High-Speed Wi-Fi</h3><p>Blazing fast fiber internet throughout the campus. Stream video lectures, attempt online mock tests, and download study material without buffering.</p><span class="fac-tag">100 Mbps Fiber</span></div></div>
+    <div class="fac-card reveal"><img class="fac-img" src="Discussion Room.jpg" alt="Discussion Room"><div class="fac-body"><div class="fac-icon">🗣️</div><h3>Discussion Room</h3><p>Dedicated group discussion room where students can collaborate, practice GD rounds, solve problems together — without disturbing the silent halls.</p><span class="fac-tag">Bookable Slots</span></div></div>
+    <div class="fac-card reveal"><img class="fac-img" src="https://images.unsplash.com/photo-1562564055-71e051d33c19?w=600&q=80" alt="Security"><div class="fac-body"><div class="fac-icon">🔒</div><h3>24/7 Safe & Secure</h3><p>CCTV surveillance throughout the campus. Dedicated locker facility for members. Entry gate managed by staff — only members allowed.</p><span class="fac-tag">CCTV + Locker</span></div></div>
+    <div class="fac-card reveal"><img class="fac-img" src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=600&q=80" alt="Books"><div class="fac-body"><div class="fac-icon">📚</div><h3>All Type of Books</h3><p>Massive collection of books for SSC, SSC, JEE, NEET, State PSC, Banking, and more. Reference books, novels, magazines, and daily newspapers available.</p><span class="fac-tag">5000+ Books</span></div></div>
+    <div class="fac-card reveal"><img class="fac-img" src="https://images.unsplash.com/photo-1550399105-c4db5fc37848?w=600&q=80" alt="Power"><div class="fac-body"><div class="fac-icon">🔌</div><h3>Power Sockets & USB</h3><p>Every seat has power outlets and USB charging. Keep your laptop, tablet, and phone fully charged throughout your study session.</p><span class="fac-tag">Every Seat</span></div></div>
+    <div class="fac-card reveal"><img class="fac-img" src="ro.jpg" alt="RO Water"><div class="fac-body"><div class="fac-icon">💧</div><h3>RO Drinking Water</h3><p>Pure RO filtered drinking water available free of cost for all members. Stay hydrated throughout your long study sessions.</p><span class="fac-tag">Free RO Water</span></div></div>
+    <div class="fac-card reveal"><img class="fac-img" src="parking .jpeg" alt="Parking"><div class="fac-body"><div class="fac-icon">🅿️</div><h3>Free Parking</h3><p>Spacious and safe parking area inside campus for bikes and cycles. No extra charges. Park and study without worry.</p><span class="fac-tag">Free for Members</span></div></div>
+    <div class="fac-card reveal"><img class="fac-img" src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&q=80" alt="Newspaper"><div class="fac-body"><div class="fac-icon">📰</div><h3>Daily Newspaper</h3><p>All major Hindi and English newspapers available daily — The Hindu, Dainik Jagran, Hindustan Times and more. Perfect for current affairs prep.</p><span class="fac-tag">Daily Updated</span></div></div>
+    <div class="fac-card reveal"><img class="fac-img" src="https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?w=600&q=80" alt="Comfort"><div class="fac-body"><div class="fac-icon">🛋️</div><h3>Comfort Zone</h3><p>Ergonomic chairs, proper ventilation, soft lighting, and a calm atmosphere — everything designed for long productive study sessions without fatigue.</p><span class="fac-tag">Ergonomic Seating</span></div></div>
+    <div class="fac-card reveal"><img class="fac-img" src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&q=80" alt="Silent Room"><div class="fac-body"><div class="fac-icon">🤫</div><h3>Silent Reading Room</h3><p>Zero-noise zone for deep concentrated study. Perfect for exam revision and last-minute preparation. Strict no-talking policy enforced.</p><span class="fac-tag">Strict Silence</span></div></div>
   </div>
 </section>
 
@@ -409,69 +420,22 @@ footer{background:var(--dark);border-top:1px solid rgba(255,255,255,.06);padding
       <p class="section-desc">Moments, milestones, and memories from our students and campus.</p>
     </div>
   </div>
-
-  <!-- VIDEO -->
   <div class="video-wrap reveal">
     <video autoplay muted loop playsinline>
       <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
-      <!-- Replace above src with your actual library video file, e.g.: <source src="library_video.mp4" type="video/mp4"> -->
       Your browser does not support the video tag.
     </video>
   </div>
-
-  <!-- PHOTO GALLERY -->
-  <!-- 
-    PHOTO NAMES — Place these files in the same folder as this HTML:
-    gallery1.jpg  — Main study hall
-    gallery2.jpg  — Reading room / students studying
-    gallery3.jpg  — AC hall interior
-    gallery4.jpg  — Book shelves
-    gallery5.jpg  — Student group photo
-    gallery6.jpg  — Discussion room
-    gallery7.jpg  — Entry gate / outside view
-    gallery8.jpg  — Night study session
-    gallery9.jpg  — Girls seating zone
-    student1.jpg  — Student photo 1 (for testimonials)
-    student2.jpg  — Student photo 2
-    student3.jpg  — Student photo 3
-  -->
   <div class="gallery-grid" style="margin-top:1.5rem;">
-    <div class="gal-item reveal">
-      <img src="gallery1.jpg" onerror="this.src='https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=600&q=80'" alt="Main Study Hall">
-      <div class="gal-overlay"><span>Main Study Hall</span></div>
-    </div>
-    <div class="gal-item tall reveal">
-      <img src="gallery2.jpg" onerror="this.src='https://images.unsplash.com/photo-1568667256549-094345857aef?w=600&q=80'" alt="Students Studying">
-      <div class="gal-overlay"><span>Students at Work</span></div>
-    </div>
-    <div class="gal-item reveal">
-      <img src="gallery3.jpg" onerror="this.src='https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&q=80'" alt="AC Hall">
-      <div class="gal-overlay"><span>AC Study Hall</span></div>
-    </div>
-    <div class="gal-item reveal">
-      <img src="gallery4.jpg" onerror="this.src='https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=600&q=80'" alt="Books">
-      <div class="gal-overlay"><span>Our Book Collection</span></div>
-    </div>
-    <div class="gal-item reveal">
-      <img src="gallery5.jpg" onerror="this.src='https://images.unsplash.com/photo-1543269664-76bc3997d9ea?w=600&q=80'" alt="Students">
-      <div class="gal-overlay"><span>Our Students</span></div>
-    </div>
-    <div class="gal-item tall reveal">
-      <img src="gallery6.jpg" onerror="this.src='https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&q=80'" alt="Discussion Room">
-      <div class="gal-overlay"><span>Discussion Room</span></div>
-    </div>
-    <div class="gal-item reveal">
-      <img src="gallery7.jpg" onerror="this.src='https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=600&q=80'" alt="Library Entrance">
-      <div class="gal-overlay"><span>Library Entrance</span></div>
-    </div>
-    <div class="gal-item reveal">
-      <img src="gallery8.jpg" onerror="this.src='https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=600&q=80'" alt="Night Study">
-      <div class="gal-overlay"><span>Night Study Session</span></div>
-    </div>
-    <div class="gal-item reveal">
-      <img src="gallery9.jpg" onerror="this.src='https://images.unsplash.com/photo-1598618443855-232ee0f819f6?w=600&q=80'" alt="Girls Zone">
-      <div class="gal-overlay"><span>Girls Study Zone</span></div>
-    </div>
+    <div class="gal-item reveal"><img src="gallery1.jpg" onerror="this.src='https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=600&q=80'" alt="Main Study Hall"><div class="gal-overlay"><span>Main Study Hall</span></div></div>
+    <div class="gal-item tall reveal"><img src="gallery2.jpg" onerror="this.src='https://images.unsplash.com/photo-1568667256549-094345857aef?w=600&q=80'" alt="Students Studying"><div class="gal-overlay"><span>Students at Work</span></div></div>
+    <div class="gal-item reveal"><img src="gallery3.jpg" onerror="this.src='https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&q=80'" alt="AC Hall"><div class="gal-overlay"><span>AC Study Hall</span></div></div>
+    <div class="gal-item reveal"><img src="gallery4.jpg" onerror="this.src='https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=600&q=80'" alt="Books"><div class="gal-overlay"><span>Our Book Collection</span></div></div>
+    <div class="gal-item reveal"><img src="gallery5.jpg" onerror="this.src='https://images.unsplash.com/photo-1543269664-76bc3997d9ea?w=600&q=80'" alt="Students"><div class="gal-overlay"><span>Our Students</span></div></div>
+    <div class="gal-item tall reveal"><img src="gallery6.jpg" onerror="this.src='https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&q=80'" alt="Discussion Room"><div class="gal-overlay"><span>Discussion Room</span></div></div>
+    <div class="gal-item reveal"><img src="gallery7.jpg" onerror="this.src='https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=600&q=80'" alt="Library Entrance"><div class="gal-overlay"><span>Library Entrance</span></div></div>
+    <div class="gal-item reveal"><img src="gallery8.jpg" onerror="this.src='https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=600&q=80'" alt="Night Study"><div class="gal-overlay"><span>Night Study Session</span></div></div>
+    <div class="gal-item reveal"><img src="gallery9.jpg" onerror="this.src='https://images.unsplash.com/photo-1598618443855-232ee0f819f6?w=600&q=80'" alt="Girls Zone"><div class="gal-overlay"><span>Girls Study Zone</span></div></div>
   </div>
 </section>
 
@@ -492,16 +456,16 @@ footer{background:var(--dark);border-top:1px solid rgba(255,255,255,.06);padding
       <div class="tim-row"><span class="tim-day">National Holidays</span><span class="tim-time">—</span><span class="t-closed">Closed</span></div>
       <div style="margin-top:1.3rem;padding:1rem;background:rgba(201,168,76,.07);border-radius:10px;border:1px solid rgba(201,168,76,.15);">
         <div style="font-size:.8rem;color:var(--gold);font-weight:600;margin-bottom:.5rem;">📞 Contact for Booking</div>
-        <div style="font-size:.87rem;color:var(--text);">+91 +91 86518 12686 / 73017 06380</div>
+        <div style="font-size:.87rem;color:var(--text);">+91 86518 12686 / 73017 06380</div>
         <div style="font-size:.78rem;color:var(--muted);margin-top:.3rem;">Near LFC Restaurants, Bodhgaya, Rajapur Mode</div>
       </div>
     </div>
     <div class="tim-card reveal">
       <h3>💺 Live Seat Availability</h3>
       <div class="seat-grid">
-        <div class="seat-zone"><div class="seat-zone-name">form-row  A</div><div class="seat-zone-count many" id="s1">8</div><div class="seat-zone-total">/35 free</div></div>
-        <div class="seat-zone"><div class="seat-zone-name">form-row  B</div><div class="seat-zone-count few" id="s2">8</div><div class="seat-zone-total">/ 25 free</div></div>
-        <div class="seat-zone"><div class="seat-zone-name">form-row  C</div><div class="seat-zone-count many" id="s3">10</div><div class="seat-zone-total">/ 25 free</div></div>
+        <div class="seat-zone"><div class="seat-zone-name">Row A</div><div class="seat-zone-count many" id="s1">8</div><div class="seat-zone-total">/35 free</div></div>
+        <div class="seat-zone"><div class="seat-zone-name">Row B</div><div class="seat-zone-count few" id="s2">8</div><div class="seat-zone-total">/ 25 free</div></div>
+        <div class="seat-zone"><div class="seat-zone-name">Row C</div><div class="seat-zone-count many" id="s3">10</div><div class="seat-zone-total">/ 25 free</div></div>
         <div class="seat-zone"><div class="seat-zone-name">Silent Room</div><div class="seat-zone-count full" id="s4">0</div><div class="seat-zone-total">/ 1 free</div></div>
         <div class="seat-zone"><div class="seat-zone-name">Girls Zone</div><div class="seat-zone-count many" id="s5">18</div><div class="seat-zone-total">/ 60 free</div></div>
         <div class="seat-zone"><div class="seat-zone-name">Disc. Room</div><div class="seat-zone-count few" id="s6">1</div><div class="seat-zone-total">/ 1 free</div></div>
@@ -521,74 +485,53 @@ footer{background:var(--dark);border-top:1px solid rgba(255,255,255,.06);padding
     </div>
   </div>
   <div class="plans-grid">
-  <div class="plan-card reveal">
-    <div class="plan-name">Daily Pass</div>
-    <div class="plan-price"><span style="text-decoration: line-through;">₹50</span> ₹25<span>/day</span></div>
-    <div class="plan-duration">Single day — 5 AM to 10 PM</div>
-    <ul class="plan-features">
-      <li>Any available seat</li>
-      <li>Wi-Fi access</li>
-      <li>Power socket</li>
-      <li>RO Drinking water</li>
-      <li class="no">Locker facility</li>
-      <li class="no">Reserved seat</li>
-    </ul>
-    <div style="color: green; font-weight:bold;">You save ₹25!</div>
-    <button class="btn-outline" onclick="selectPlan('Daily Pass – ₹25')" style="width:100%;justify-content:center;">Get Pass</button>
+    <div class="plan-card reveal">
+      <div class="plan-name">Daily Pass</div>
+      <div class="plan-price"><span style="text-decoration:line-through;">₹50</span> ₹25<span>/day</span></div>
+      <div class="plan-duration">Single day — 5 AM to 10 PM</div>
+      <ul class="plan-features">
+        <li>Any available seat</li><li>Wi-Fi access</li><li>Power socket</li><li>RO Drinking water</li>
+        <li class="no">Locker facility</li><li class="no">Reserved seat</li>
+      </ul>
+      <div style="color:green;font-weight:bold;">You save ₹25!</div>
+      <button class="btn-outline" onclick="selectPlan('Daily Pass – ₹25')" style="width:100%;justify-content:center;">Get Pass</button>
+    </div>
+    <div class="plan-card featured reveal">
+      <div class="plan-badge">Premium</div>
+      <div class="plan-name">Monthly</div>
+      <div class="plan-price"><span style="text-decoration:line-through;">₹999</span> ₹499<span>/month</span></div>
+      <div class="plan-duration">30 days unlimited access</div>
+      <ul class="plan-features">
+        <li>Reserved seat option</li><li>Wi-Fi access</li><li>Power socket</li><li>RO Drinking water</li>
+        <li>Locker facility</li><li>Morning batch access</li>
+      </ul>
+      <div style="color:green;font-weight:bold;">You save ₹500!</div>
+      <button class="btn-gold" onclick="selectPlan('Monthly – ₹499')" style="width:100%;justify-content:center;">Get Membership</button>
+    </div>
+    <div class="plan-card featured reveal" style="border-color:lightgreen;">
+      <div class="plan-badge">Most Popular</div>
+      <div class="plan-name">3 Months</div>
+      <div class="plan-price"><span style="text-decoration:line-through;">₹2399</span> ₹1399<span>/3mo</span></div>
+      <div class="plan-duration">Best for serious aspirants</div>
+      <ul class="plan-features">
+        <li>Reserved seat guaranteed</li><li>Priority Wi-Fi</li><li>Power socket</li><li>Free locker</li>
+        <li>Discussion room access</li><li>Priority entry</li><li>RO Drinking water</li><li>Locker facility</li>
+      </ul>
+      <div style="color:green;font-weight:bold;">You save ₹1000!</div>
+      <button class="btn-outline" onclick="selectPlan('3 Months – ₹1399')" style="width:100%;justify-content:center;">Get Plan</button>
+    </div>
+    <div class="plan-card reveal">
+      <div class="plan-name">Annual</div>
+      <div class="plan-price"><span style="text-decoration:line-through;">₹9999</span> ₹4999<span>/year</span></div>
+      <div class="plan-duration">Full year — Best value!</div>
+      <ul class="plan-features">
+        <li>Permanent reserved seat</li><li>Priority Wi-Fi</li><li>Free locker</li>
+        <li>Discussion room priority</li><li>Guest pass ×5</li><li>All facilities included</li>
+      </ul>
+      <div style="color:green;font-weight:bold;">You save ₹5000!</div>
+      <button class="btn-outline" onclick="selectPlan('Annual – ₹4999')" style="width:100%;justify-content:center;">Get Plan</button>
+    </div>
   </div>
-
-  <div class="plan-card featured reveal">
-    <div class="plan-badge">Premium</div>
-    <div class="plan-name">Monthly</div>
-    <div class="plan-price"><span style="text-decoration: line-through;">₹999</span> ₹499<span>/month</span></div>
-    <div class="plan-duration">30 days unlimited access</div>
-    <ul class="plan-features">
-      <li>Reserved seat option</li>
-      <li>Wi-Fi access</li>
-      <li>Power socket</li>
-      <li>RO Drinking water</li>
-      <li>Locker facility</li>
-      <li>Morning batch access</li>
-    </ul>
-    <div style="color: green; font-weight:bold;">You save ₹500!</div>
-    <button class="btn-gold" onclick="selectPlan('Monthly – ₹499')" style="width:100%;justify-content:center;">Get Membership</button>
-  </div>
-
-  <div class="plan-card featured reveal" style="border-color: lightgreen;">
-    <div class="plan-badge">Most Popular</div>
-    <div class="plan-name">3 Months</div>
-    <div class="plan-price"><span style="text-decoration: line-through;">₹2399</span> ₹1399<span>/3mo</span></div>
-    <div class="plan-duration">Best for serious aspirants</div>
-    <ul class="plan-features">
-      <li>Reserved seat guaranteed</li>
-      <li>Priority Wi-Fi</li>
-      <li>Power socket</li>
-      <li>Free locker</li>
-      <li>Discussion room access</li>
-      <li>Priority entry</li>
-      <li>RO Drinking water</li>
-      <li>Locker facility</li>
-    </ul>
-    <div style="color: green; font-weight:bold;">You save ₹1000!</div>
-    <button class="btn-outline" onclick="selectPlan('3 Months – ₹1399')" style="width:100%;justify-content:center;">Get Plan</button>
-  </div>
-
-  <div class="plan-card reveal">
-    <div class="plan-name">Annual</div>
-    <div class="plan-price"><span style="text-decoration: line-through;">₹9999</span> ₹4999<span>/year</span></div>
-    <div class="plan-duration">Full year — Best value!</div>
-    <ul class="plan-features">
-      <li>Permanent reserved seat</li>
-      <li>Priority Wi-Fi</li>
-      <li>Free locker</li>
-      <li>Discussion room priority</li>
-      <li>Guest pass ×5</li>
-      <li>All facilities included</li>
-    </ul>
-    <div style="color: green; font-weight:bold;">You save ₹5000!</div>
-    <button class="btn-outline" onclick="selectPlan('Annual – ₹4999')" style="width:100%;justify-content:center;">Get Plan</button>
-  </div>
-</div>
 </section>
 
 <!-- RULES -->
@@ -619,41 +562,28 @@ footer{background:var(--dark);border-top:1px solid rgba(255,255,255,.06);padding
       <h2 class="section-title">What Students<br><em>Say About Us</em></h2>
     </div>
   </div>
-<div class="testi-grid">
+  <div class="testi-grid">
     <div class="testi-card reveal">
-        <div class="stars">★★★★★</div>
-        <p class="testi-text">Budha Library ne meri SSC preparation ko ek naya direction diya. AC hall, peaceful environment, aur fast Wi-Fi — sab kuch perfect hai. Pawan Sir ka support bhi bohot helpful hai!</p>
-        <div class="testi-author">
-            <img class="testi-avatar" src="student1.jpg" onerror="this.src='https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=80&q=80'" alt="Rohan">
-            <div><div class="testi-name">Rohan Kumar</div><div class="testi-role">SSC Aspirant, BodhGaya</div></div>
-        </div>
+      <div class="stars">★★★★★</div>
+      <p class="testi-text">Budha Library ne meri SSC preparation ko ek naya direction diya. AC hall, peaceful environment, aur fast Wi-Fi — sab kuch perfect hai. Pawan Sir ka support bhi bohot helpful hai!</p>
+      <div class="testi-author"><img class="testi-avatar" src="student1.jpg" onerror="this.src='https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=80&q=80'" alt="Rohan"><div><div class="testi-name">Rohan Kumar</div><div class="testi-role">SSC Aspirant, BodhGaya</div></div></div>
     </div>
     <div class="testi-card reveal">
-        <div class="stars">★★★★★</div>
-        <p class="testi-text">Girls ke liye alag aur safe zone hai, isliye mujhe bohot comfortable feel hota hai. Wi-Fi itna fast hai ki online mock tests bina buffering ke hote hain. Best library in Bodhgaya!</p>
-        <div class="testi-author">
-            <img class="testi-avatar" src="student2.jpg" onerror="this.src='https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&q=80'" alt="Priya">
-            <div><div class="testi-name">Sweta</div><div class="testi-role">12th Student</div></div>
-        </div>
+      <div class="stars">★★★★★</div>
+      <p class="testi-text">Girls ke liye alag aur safe zone hai, isliye mujhe bohot comfortable feel hota hai. Wi-Fi itna fast hai ki online mock tests bina buffering ke hote hain. Best library in Bodhgaya!</p>
+      <div class="testi-author"><img class="testi-avatar" src="student2.jpg" onerror="this.src='https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&q=80'" alt="Priya"><div><div class="testi-name">Sweta</div><div class="testi-role">12th Student</div></div></div>
     </div>
     <div class="testi-card reveal">
-        <div class="stars">★★★★☆</div>
-        <p class="testi-text">Morning 5 AM batch se main 3 ghante college se pehle padh leta hoon. Free parking bhi hai to bike leke aana easy hai. Discussion room bhi bohot helpful hai group study ke liye!</p>
-        <div class="testi-author">
-            <img class="testi-avatar" src="student3.jpg" onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&q=80'" alt="Amit">
-            <div><div class="testi-name">Amit Singh</div><div class="testi-role">JEE Aspirant, Bodh Gaya</div></div>
-        </div>
+      <div class="stars">★★★★☆</div>
+      <p class="testi-text">Morning 5 AM batch se main 3 ghante college se pehle padh leta hoon. Free parking bhi hai to bike leke aana easy hai. Discussion room bhi bohot helpful hai group study ke liye!</p>
+      <div class="testi-author"><img class="testi-avatar" src="student3.jpg" onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&q=80'" alt="Amit"><div><div class="testi-name">Amit Singh</div><div class="testi-role">JEE Aspirant, Bodh Gaya</div></div></div>
     </div>
-    <!-- New Testimonial Card -->
     <div class="testi-card reveal">
-        <div class="stars">★★★★★</div>
-        <p class="testi-text">Library ka environment bohot peaceful hai. AC hall aur proper lighting se padhai aur productive ho jati hai. Staff bhi friendly aur helpful hai. Truly recommended!</p>
-        <div class="testi-author">
-            <img class="testi-avatar" src="student4.jpg" onerror="this.src='https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=80&q=80'" alt="Neha">
-            <div><div class="testi-name">Sweeti </div><div class="testi-role">12th class student  (Bodh Gaya ) </div></div>
-        </div>
+      <div class="stars">★★★★★</div>
+      <p class="testi-text">Library ka environment bohot peaceful hai. AC hall aur proper lighting se padhai aur productive ho jati hai. Staff bhi friendly aur helpful hai. Truly recommended!</p>
+      <div class="testi-author"><img class="testi-avatar" src="student4.jpg" onerror="this.src='https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=80&q=80'" alt="Neha"><div><div class="testi-name">Sweeti</div><div class="testi-role">12th class student (Bodh Gaya)</div></div></div>
     </div>
-</div>
+  </div>
 </section>
 
 <!-- CONTACT -->
@@ -663,24 +593,10 @@ footer{background:var(--dark);border-top:1px solid rgba(255,255,255,.06);padding
   <div class="contact-grid">
     <div class="contact-info">
       <h3>📍 Budha Library Info</h3>
-      <div class="c-item">
-        <div class="c-icon">📍</div>
-        <div><div class="c-label">Address</div><div class="c-val">Near LFC Restaurants, Bodhgaya, Rajapur Mode, Bihar – 824231</div></div>
-      </div>
-      <div class="c-item">
-        <div class="c-icon">📞</div>
-        <div><div class="c-label">Phone Numbers</div><div class="c-val"><a href="tel:+91+91 86518 12686">+91 +91 86518 12686</a> &nbsp;/&nbsp; <a href="tel:+917301706380">+91 73017 06380</a></div></div>
-      </div>
-      <div class="c-item">
-        <div class="c-icon">🕐</div>
-        <div><div class="c-label">Hours</div><div class="c-val">Mon–Sat: 5 AM – 10 PM &nbsp;|&nbsp; Sun: 6 AM – 8 PM</div></div>
-      </div>
-      <div class="c-item">
-        <div class="c-icon">👨‍💼</div>
-        <div><div class="c-label">Owner</div><div class="c-val">Pawan Sir &nbsp;|&nbsp; <a href="https://youtube.com/@pawansir02?si=0NSU-GTuSabdR9_X" target="_blank">YouTube ↗</a> &nbsp;|&nbsp; <a href="https://www.instagram.com/pawanyadav02?igsh=MTZrZGQ5d2dvYTR5aA==" target="_blank">Instagram ↗</a></div></div>
-      </div>
-      
-     
+      <div class="c-item"><div class="c-icon">📍</div><div><div class="c-label">Address</div><div class="c-val">Near LFC Restaurants, Bodhgaya, Rajapur Mode, Bihar – 824231</div></div></div>
+      <div class="c-item"><div class="c-icon">📞</div><div><div class="c-label">Phone Numbers</div><div class="c-val"><a href="tel:+918651812686">+91 86518 12686</a> &nbsp;/&nbsp; <a href="tel:+917301706380">+91 73017 06380</a></div></div></div>
+      <div class="c-item"><div class="c-icon">🕐</div><div><div class="c-label">Hours</div><div class="c-val">Mon–Sat: 5 AM – 10 PM &nbsp;|&nbsp; Sun: 6 AM – 8 PM</div></div></div>
+      <div class="c-item"><div class="c-icon">👨‍💼</div><div><div class="c-label">Owner</div><div class="c-val">Pawan Sir &nbsp;|&nbsp; <a href="https://youtube.com/@pawansir02?si=0NSU-GTuSabdR9_X" target="_blank">YouTube ↗</a> &nbsp;|&nbsp; <a href="https://www.instagram.com/pawanyadav02?igsh=MTZrZGQ5d2dvYTR5aA==" target="_blank">Instagram ↗</a></div></div></div>
       <a class="map-thumb" href="https://share.google/2tOymUM4FMesvTkiE" target="_blank" rel="noopener">
         <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=600&q=80" alt="Map">
         <div class="map-label">📍 Open in Google Maps — Budha Library, Bodhgaya</div>
@@ -696,12 +612,9 @@ footer{background:var(--dark);border-top:1px solid rgba(255,255,255,.06);padding
       <div class="fg">
         <label>Interested In</label>
         <select id="cPlan">
-          <option>Daily Pass – ₹25</option>
-          <option>Monthly Membership – ₹499</option>
-          <option>3 Month Plan – ₹1399</option>
-          <option>Annual Plan – ₹4999</option>
-          <option>Discussion Room Booking</option>
-          <option>General Enquiry</option>
+          <option>Daily Pass – ₹25</option><option>Monthly Membership – ₹499</option>
+          <option>3 Month Plan – ₹1399</option><option>Annual Plan – ₹4999</option>
+          <option>Discussion Room Booking</option><option>General Enquiry</option>
         </select>
       </div>
       <div class="fg"><label>Your Message</label><textarea id="cMsg" placeholder="Write your query or question..."></textarea></div>
@@ -715,22 +628,19 @@ footer{background:var(--dark);border-top:1px solid rgba(255,255,255,.06);padding
   <div class="footer-grid">
     <div class="footer-brand">
       <div class="nav-logo" style="gap:.6rem;">
-        <img src="Logo." alt="Logo" style="height:38px;width:38px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);" onerror="this.style.display='none';">
+        <img src="Logo.jpg" alt="Logo" style="height:38px;width:38px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);" onerror="this.style.display='none';">
         <div class="nav-logo-text">Budha Library<small>Bodhgaya, Bihar</small></div>
       </div>
       <p>A premium study space for serious students. Quiet, comfortable, fully AC — with everything you need to crack your exam. Bodhgaya's most trusted library.</p>
     </div>
     <div class="footer-col">
       <h4>Quick Links</h4>
-      <a href="#facilities">Facilities</a>
-      <a href="#gallery">Gallery</a>
-      <a href="#timings">Timings</a>
-      <a href="#membership">Membership</a>
-      <a href="#rules">Library Rules</a>
+      <a href="#facilities">Facilities</a><a href="#gallery">Gallery</a>
+      <a href="#timings">Timings</a><a href="#membership">Membership</a><a href="#rules">Library Rules</a>
     </div>
     <div class="footer-col">
       <h4>Contact</h4>
-      <a href="tel:+91+91 86518 12686">📞 +91 86518 12686</a>
+      <a href="tel:+918651812686">📞 +91 86518 12686</a>
       <a href="tel:+918651812686">📞 8651812686</a>
       <a href="mailto:pawansir@23456gmail.com">✉️ Email Us</a>
       <a href="https://share.google/2tOymUM4FMesvTkiE" target="_blank">📍 Get Directions</a>
@@ -743,12 +653,12 @@ footer{background:var(--dark);border-top:1px solid rgba(255,255,255,.06);padding
     </div>
   </div>
   <div class="footer-bottom">
-    <p><p>© 2026 Budha Library, Bodhgaya. Made with ❤️ by Pawan Sir<br><span style="font-size:0.8rem; color:#38373b;">SR</span></p></p>
+    <p>© 2026 Budha Library, Bodhgaya. Made with ❤️ by Pawan Sir<br><span style="font-size:.8rem;color:#38373b;">SR</span></p>
     <div class="social-links">
       <a class="social-link" href="https://www.instagram.com/budha_library?igsh=MTB1NmQ3aGQyZDhuaA==" target="_blank" title="Library Instagram">📸</a>
       <a class="social-link" href="https://www.instagram.com/pawanyadav02?igsh=MTZrZGQ5d2dvYTR5aA==" target="_blank" title="Pawan Sir Instagram">👤</a>
       <a class="social-link" href="https://youtube.com/@pawansir02?si=0NSU-GTuSabdR9_X" target="_blank" title="YouTube">▶️</a>
-      <a class="social-link" href="https://wa.me/91+91 86518 12686" target="_blank" title="WhatsApp">💬</a>
+      <a class="social-link" href="https://wa.me/918651812686" target="_blank" title="WhatsApp">💬</a>
     </div>
   </div>
 </footer>
@@ -764,13 +674,11 @@ footer{background:var(--dark);border-top:1px solid rgba(255,255,255,.06);padding
     <div class="fg">
       <label>Select Plan</label>
       <select id="regPlan">
-        <option>Daily Pass – ₹25</option>
-        <option>Monthly – ₹499</option>
-        <option>3 Months – ₹1399</option>
-        <option>Annual – ₹4999</option>
+        <option>Daily Pass – ₹25</option><option>Monthly – ₹499</option>
+        <option>3 Months – ₹1399</option><option>Annual – ₹4999</option>
       </select>
     </div>
-    <div class="fg"><label>Exam Preparing For</label><input type="text" id="regExam" placeholder="e.g. SSC, SSC, JEE, NEET..."></div>
+    <div class="fg"><label>Exam Preparing For</label><input type="text" id="regExam" placeholder="e.g. SSC, JEE, NEET..."></div>
     <button class="btn-gold" style="width:100%;justify-content:center;margin-top:.5rem;" onclick="registerWhatsApp()">💬 Register via WhatsApp →</button>
   </div>
 </div>
@@ -778,35 +686,41 @@ footer{background:var(--dark);border-top:1px solid rgba(255,255,255,.06);padding
 <div class="toast" id="toast"></div>
 
 <script>
+const LIBRARY_LINK = 'http://29lucky.github.io/herlast/';
+
+// ─── OPEN LIBRARY LINK WITH ANIMATION ───
+function openLibraryLink(){
+  const fl = document.getElementById('linkFlash');
+  fl.classList.add('show');
+  setTimeout(()=>{
+    window.open(LIBRARY_LINK, '_blank');
+    setTimeout(()=>fl.classList.remove('show'), 400);
+  }, 650);
+}
+
 // ─── HAMBURGER / DRAWER ───
 function toggleDrawer(){
-  const d=document.getElementById('mobileDrawer');
-  const h=document.getElementById('hamburger');
-  d.classList.toggle('open');
-  h.classList.toggle('open');
+  document.getElementById('mobileDrawer').classList.toggle('open');
+  document.getElementById('hamburger').classList.toggle('open');
 }
 function closeDrawer(){
   document.getElementById('mobileDrawer').classList.remove('open');
   document.getElementById('hamburger').classList.remove('open');
 }
 document.addEventListener('click',function(e){
-  const d=document.getElementById('mobileDrawer');
-  const h=document.getElementById('hamburger');
-  if(d.classList.contains('open')&&!d.contains(e.target)&&!h.contains(e.target)){closeDrawer();}
+  const d=document.getElementById('mobileDrawer'),h=document.getElementById('hamburger');
+  if(d.classList.contains('open')&&!d.contains(e.target)&&!h.contains(e.target))closeDrawer();
 });
 
 // ─── SCROLL REVEAL ───
 const observer=new IntersectionObserver(entries=>{
-  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');}});
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});
 },{threshold:0.08});
 document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
 
 // ─── SEAT LIVE UPDATE ───
 function updateSeats(){
-  const seats=[
-    {id:'s1',max:80},{id:'s2',max:60},{id:'s3',max:100},
-    {id:'s4',max:40},{id:'s5',max:60},{id:'s6',max:20}
-  ];
+  const seats=[{id:'s1',max:80},{id:'s2',max:60},{id:'s3',max:100},{id:'s4',max:40},{id:'s5',max:60},{id:'s6',max:20}];
   seats.forEach(s=>{
     const el=document.getElementById(s.id);if(!el)return;
     let v=parseInt(el.textContent);
@@ -834,8 +748,7 @@ function sendWhatsApp(){
   const msg=document.getElementById('cMsg').value.trim();
   if(!name||!phone){toast('⚠️ Please fill your name and phone number.');return;}
   const text=`Hello Budha Library! 👋\n\n*Name:* ${name}\n*Phone:* ${phone}\n*Interested In:* ${plan}\n*Message:* ${msg||'No additional message'}\n\nPlease confirm my enquiry. Thank you!`;
-  const url='https://wa.me/91+91 86518 12686?text='+encodeURIComponent(text);
-  window.open(url,'_blank');
+  window.open('https://wa.me/918651812686?text='+encodeURIComponent(text),'_blank');
   toast('✅ Opening WhatsApp with your message!');
   ['cName','cPhone','cMsg'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
 }
@@ -848,8 +761,7 @@ function registerWhatsApp(){
   const exam=document.getElementById('regExam').value.trim();
   if(!name||!phone){toast('⚠️ Please fill your name and phone number.');return;}
   const text=`Hello Budha Library! 🙏\n\nMain membership lena chahta/chahti hoon.\n\n*Name:* ${name}\n*Phone:* ${phone}\n*Plan:* ${plan}\n*Exam:* ${exam||'Not specified'}\n\nKripya meri seat confirm kar dijiye. Thank you!`;
-  const url='https://wa.me/91+91 86518 12686?text='+encodeURIComponent(text);
-  window.open(url,'_blank');
+  window.open('https://wa.me/918651812686?text='+encodeURIComponent(text),'_blank');
   document.getElementById('registerModal').classList.remove('open');
   toast('🎉 Opening WhatsApp! Register kar lo '+name+' ji!');
 }
@@ -865,7 +777,7 @@ document.querySelectorAll('.modal-overlay').forEach(m=>{
   m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');});
 });
 
-// ─── SMOOTH SCROLL FOR NAV LINKS ───
+// ─── SMOOTH SCROLL ───
 document.querySelectorAll('a[href^="#"]').forEach(a=>{
   a.addEventListener('click',function(e){
     const target=document.querySelector(this.getAttribute('href'));
